@@ -12,9 +12,21 @@ TARGET = TowerDefencePAA
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+    tower.cpp \
+    game.cpp \
+    wall.cpp \
+    buildwallicon.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    tower.h \
+    game.h \
+    wall.h \
+    buildwallicon.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
+
+RESOURCES += \
+    resource.qrc
+
+QMAKE_CXXFLAGS += -std=c++0x

@@ -1,2 +1,11 @@
-<RCC/>
-
+<RCC>
+    <qresource prefix="/wall">
+        <file>assets/wall/brick_red.png</file>
+    </qresource>
+    <qresource prefix="/util">
+        <file>assets/util/sTrackBorder_0.png</file>
+    </qresource>
+    <qresource prefix="/floor">
+        <file>assets/floor/dirt.png</file>
+    </qresource>
+</RCC>

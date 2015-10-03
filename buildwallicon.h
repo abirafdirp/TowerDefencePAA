@@ -1,12 +1,15 @@
 #ifndef BUILDWALLICON_H
 #define BUILDWALLICON_H
 
+#include <QGraphicsPixmapItem>
+#include <QGraphicsSceneMouseEvent>
 
-class buildwallicon
-{
+
+class BuildWallIcon: public QGraphicsPixmapItem{
 public:
-    buildwallicon();
-    ~buildwallicon();
+    BuildWallIcon(QGraphicsItem * parent=0);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 };
 
 #endif // BUILDWALLICON_H
