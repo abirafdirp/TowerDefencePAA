@@ -8,4 +8,7 @@
     <qresource prefix="/floor">
         <file>assets/floor/dirt.png</file>
     </qresource>
+    <qresource prefix="/enemy">
+        <file>assets/enemy/slimeBlue.png</file>
+    </qresource>
 </RCC>

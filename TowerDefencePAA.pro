@@ -16,13 +16,15 @@ SOURCES += main.cpp \
     tower.cpp \
     game.cpp \
     wall.cpp \
-    buildwallicon.cpp
+    buildwallicon.cpp \
+    enemyblueslime.cpp
 
 HEADERS  += \
     tower.h \
     game.h \
     wall.h \
-    buildwallicon.h
+    buildwallicon.h \
+    enemyblueslime.h
 
 FORMS    +=
 

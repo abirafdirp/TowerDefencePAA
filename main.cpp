@@ -7,12 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    Game * game = new Game();
-    game->setMapTile(19,10,64);
-    game->createScene();
-    game->createMapTiles(":/floor/assets/floor/dirt.png");
-    // game->createTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
-    game->setCursor(":/wall/assets/wall/brick_red.png");
+    Game * game = new Game();   
     game->show();
 
     return a.exec();
