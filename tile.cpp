@@ -1,7 +1,8 @@
-#include "pathtile.h"
+#include "tile.h"
 
-pathtile::pathtile()
+
+
+Tile::Tile()
 {
 
 }
-

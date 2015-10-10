@@ -2,6 +2,7 @@
 #include "tower.h"
 #include "enemyblueslime.h"
 #include "wall.h"
+#include "tile.h"
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QGraphicsPixmapItem>
@@ -32,7 +33,6 @@ void Game::createMapTiles(QString filename)
     for(int i = 0; i < map_tiles_x; i++){
         for(int n = 0; n < map_tiles_y; n++){
             MapTile tile;
-            tile.walkable = true;
             tile.x = i;
             tile.y = n;
             tile.x_real = this->map_tile_size * i;
@@ -41,7 +41,7 @@ void Game::createMapTiles(QString filename)
             tiles[i][n].append(tile);
 
             // set the floor sprite
-            QGraphicsPixmapItem * floor = new QGraphicsPixmapItem();
+            Tile * floor = new Tile();
             floor->setPixmap(QPixmap(filename));
             floor->setScale(0.5);
             floor->setZValue(0);
@@ -115,7 +115,6 @@ void Game::generatePath(Game::TilePoint spawn, Game::TilePoint dest)
             tile.x = i;
             tile.y = n;
             tile.walkable = true;
-            a_star_tiles.append();
         }
     }
 }
@@ -162,11 +161,6 @@ void Game::spawnBlueSlime(TilePoint tile_point)
     QTimer * fps = new QTimer(this);
     connect(fps,SIGNAL(timeout()),blueslime,SLOT(move()));
     fps->start(1000);
-}
-
-void Game::generatePath()
-{
-
 }
 
 int Game::x_scene(int x)

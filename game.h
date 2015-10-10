@@ -24,7 +24,6 @@ public:
     int map_tile_size; // in pixels
 
     struct MapTile{
-        bool walkable;
         QString sprite;
         int x;
         int y;
