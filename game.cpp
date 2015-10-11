@@ -29,24 +29,23 @@ Game::Game()
 
 void Game::createMapTiles(QString filename)
 {
-    QList<MapTile> tiles[map_tiles_x][map_tiles_y];
+    QList<Tile*> tiles[map_tiles_x][map_tiles_y];
     for(int i = 0; i < map_tiles_x; i++){
         for(int n = 0; n < map_tiles_y; n++){
-            MapTile tile;
-            tile.x = i;
-            tile.y = n;
-            tile.x_real = this->map_tile_size * i;
-            tile.y_real = this->map_tile_size * n;
-
-            tiles[i][n].append(tile);
 
             // set the floor sprite
-            Tile * floor = new Tile();
-            floor->setPixmap(QPixmap(filename));
-            floor->setScale(0.5);
-            floor->setZValue(0);
-            floor->setPos(i*64,n*64);
-            scene->addItem(floor);
+            Tile * tile = new Tile();
+            tile->setPixmap(QPixmap(filename));
+            tile->setScale(0.5);
+            tile->setZValue(0);
+            tile->setPos(i*64,n*64);
+            tile->setX(i);
+            tile->setY(n);
+            tile->setXReal(this->map_tile_size * i);
+            tile->setYReal(this->map_tile_size * n);
+
+            tiles[i][n].append(tile);
+            scene->addItem(tile);
         }
     }
 
@@ -161,6 +160,11 @@ void Game::spawnBlueSlime(TilePoint tile_point)
     QTimer * fps = new QTimer(this);
     connect(fps,SIGNAL(timeout()),blueslime,SLOT(move()));
     fps->start(1000);
+}
+
+int Game::getTileSize()
+{
+    return map_tile_size;
 }
 
 int Game::x_scene(int x)

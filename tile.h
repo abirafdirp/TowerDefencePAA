@@ -6,7 +6,7 @@
 
 class Tile: public QObject, public QGraphicsPixmapItem {
 public:
-    Tile();
+    Tile(QGraphicsItem * parent=0);
     int x;
     int y;
 

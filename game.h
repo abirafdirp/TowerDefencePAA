@@ -60,6 +60,9 @@ public:
     // spawning entities
     void spawnBlueSlime(TilePoint);
 
+    // getter setter
+    int getTileSize();
+
 private:
     // game initializations
     void createMapTiles(QString filename);
