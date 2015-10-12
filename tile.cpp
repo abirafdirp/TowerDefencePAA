@@ -1,5 +1,6 @@
 #include "tile.h"
 #include "game.h"
+#include <QPoint>
 
 extern Game * game;
 
@@ -8,22 +9,12 @@ Tile::Tile(QGraphicsItem * parent)
 
 }
 
-void Tile::setX(int x)
+void Tile::setPoint(QPoint point)
 {
-    this->x = x;
+    this->point = point;
 }
 
-void Tile::setY(int y)
+void Tile::setPointReal(QPoint point)
 {
-    this->y = y;
-}
-
-void Tile::setXReal(int x)
-{
-    this->x_real = x * game->getTileSize();
-}
-
-void Tile::setYReal(int y)
-{
-    this->y_real = y * game->getTileSize();
+    this->point_real = point * game->getTileSize();
 }

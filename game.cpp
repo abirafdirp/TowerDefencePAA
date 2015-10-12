@@ -11,6 +11,7 @@
 #include <QTimer>
 #include <QObject>
 #include <QDebug>
+#include <QPoint>
 
 Game::Game()
 {
@@ -22,8 +23,8 @@ Game::Game()
     createMapTiles(":/floor/assets/floor/dirt.png");
     createTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
     setCursor(":/wall/assets/wall/brick_red.png");
-    TilePoint spawn1 = addTilePoint(12,5);
-    TilePoint dest1 = addTilePoint(19,5);
+    QPoint spawn1 = QPoint(14,8);
+    QPoint dest1 = QPoint(1,8);
     spawnBlueSlime(spawn1);
 }
 
@@ -39,10 +40,8 @@ void Game::createMapTiles(QString filename)
             tile->setScale(0.5);
             tile->setZValue(0);
             tile->setPos(i*64,n*64);
-            tile->setX(i);
-            tile->setY(n);
-            tile->setXReal(this->map_tile_size * i);
-            tile->setYReal(this->map_tile_size * n);
+            tile->setPoint(QPoint(i,n));
+            tile->setPointReal(QPoint(this->map_tile_size*i,this->map_tile_size*n));
 
             tiles[i][n].append(tile);
             scene->addItem(tile);
@@ -96,15 +95,7 @@ void Game::setMapTile(int map_tiles_x, int map_tiles_y, int map_tile_size)
     this->map_tile_size = map_tile_size;
 }
 
-Game::TilePoint Game::addTilePoint(int x, int y)
-{
-    TilePoint spawn;
-    spawn.x = x;
-    spawn.y = y;
-    return spawn;
-}
-
-void Game::generatePath(Game::TilePoint spawn, Game::TilePoint dest)
+void Game::generatePath(QPoint spawn, QPoint dest)
 {
     for(int i = 0; i < map_tiles_x; i++){
         for(int n = 0; n < map_tiles_y; n++){
@@ -152,11 +143,11 @@ void Game::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void Game::spawnBlueSlime(TilePoint tile_point)
+void Game::spawnBlueSlime(QPoint point)
 {
     BlueSlime * blueslime = new BlueSlime();
     scene->addItem(blueslime);
-    blueslime->setPos(x_scene(tile_point.x),y_scene(tile_point.y));
+    blueslime->setPos(x_scene(point.x()),y_scene(point.y()));
     QTimer * fps = new QTimer(this);
     connect(fps,SIGNAL(timeout()),blueslime,SLOT(move()));
     fps->start(1000);
@@ -164,18 +155,19 @@ void Game::spawnBlueSlime(TilePoint tile_point)
 
 int Game::getTileSize()
 {
-    return map_tile_size;
+    return this->map_tile_size;
 }
 
 int Game::x_scene(int x)
 {
-    return x * map_tile_size;
+    return x * this->map_tile_size;
 }
 
 int Game::y_scene(int y)
 {
-    return y * map_tile_size;
+    return y * this->map_tile_size;
 }
+
 void Game::test()
 {
     qDebug() << "fuck2";

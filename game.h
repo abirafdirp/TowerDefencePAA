@@ -12,12 +12,6 @@ public:
     QGraphicsScene * scene;
     Wall * build_wall;
 
-    // represent a tile coordinate. 1 x and y equals 1 tile.
-    struct TilePoint{
-        int x;
-        int y;
-    };
-
     // map and tile details
     int map_tiles_x; // number of tiles in x axis
     int map_tiles_y;
@@ -58,7 +52,7 @@ public:
     void mousePressEvent(QMouseEvent *event);
 
     // spawning entities
-    void spawnBlueSlime(TilePoint);
+    void spawnBlueSlime(QPoint);
 
     // getter setter
     int getTileSize();
@@ -71,8 +65,7 @@ private:
     void setMapTile(int map_tiles_x, int map_tiles_y, int map_tile_size);
 
     // pathing
-    TilePoint addTilePoint(int x,int y);
-    void generatePath(TilePoint spawn,TilePoint dest);
+    void generatePath(QPoint spawn,QPoint dest);
 
     // convert tile coordinate to scene coordinate
     int x_scene(int x);

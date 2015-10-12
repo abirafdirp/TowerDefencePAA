@@ -7,16 +7,11 @@
 class Tile: public QObject, public QGraphicsPixmapItem {
 public:
     Tile(QGraphicsItem * parent=0);
-    int x;
-    int y;
+    QPoint point;
+    QPoint point_real;
 
-    int x_real;
-    int y_real;
-
-    void setX(int x);
-    void setY(int y);
-    void setXReal(int x);
-    void setYReal(int y);
+    void setPoint(QPoint point);
+    void setPointReal(QPoint point);
 
 };
 
