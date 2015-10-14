@@ -3,8 +3,10 @@
 #include <QString>
 #include <QGraphicsPixmapItem>
 #include <QObject>
+#include "Game.h"
 
 class Tile: public QObject, public QGraphicsPixmapItem {
+    Q_OBJECT
 public:
     Tile(QGraphicsItem * parent=0);
     QPoint point;

@@ -1,12 +1,13 @@
-#include "tile.h"
-#include "game.h"
+#include "Tile.h"
+#include "Game.h"
+#include "MyApplication.h"
 #include <QPoint>
+#include <QPixmap>
 
-extern Game * game;
 
-Tile::Tile(QGraphicsItem * parent)
+
+Tile::Tile(QGraphicsItem *parent)
 {
-
 }
 
 void Tile::setPoint(QPoint point)
@@ -16,5 +17,5 @@ void Tile::setPoint(QPoint point)
 
 void Tile::setPointReal(QPoint point)
 {
-    this->point_real = point * game->getTileSize();
+    //this->point_real = point * Game::getInstance().getTileSize();
 }

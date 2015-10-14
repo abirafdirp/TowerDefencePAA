@@ -1,8 +1,8 @@
-#include "game.h"
-#include "tower.h"
-#include "enemyblueslime.h"
-#include "wall.h"
-#include "tile.h"
+#include "Game.h"
+#include "Tower.h"
+#include "EnemyBlueSlime.h"
+#include "Wall.h"
+#include "Tile.h"
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QGraphicsPixmapItem>
@@ -23,7 +23,7 @@ Game::Game()
     createMapTiles(":/floor/assets/floor/dirt.png");
     createTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
     setCursor(":/wall/assets/wall/brick_red.png");
-    QPoint spawn1 = QPoint(14,8);
+    QPoint spawn1 = QPoint(4,5);
     QPoint dest1 = QPoint(1,8);
     spawnBlueSlime(spawn1);
 }
@@ -107,6 +107,12 @@ void Game::generatePath(QPoint spawn, QPoint dest)
             tile.walkable = true;
         }
     }
+}
+
+Game &Game::getInstance()
+{
+    static Game instance;
+    return instance;
 }
 
 void Game::setCursor(QString filename)

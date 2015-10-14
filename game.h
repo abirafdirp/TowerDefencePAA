@@ -1,12 +1,13 @@
 #ifndef GAME
 #define GAME
 #include <QGraphicsView>
-#include "wall.h"
+#include "Wall.h"
 
 
 class Game: public QGraphicsView{
+    Q_OBJECT
 public:
-    Game();
+    static Game& getInstance();
 
     QGraphicsPixmapItem * cursor;
     QGraphicsScene * scene;
@@ -58,6 +59,17 @@ public:
     int getTileSize();
 
 private:
+    Game();
+    static Game instance;
+    // C++ 03
+    // ========
+    // Dont forget to declare these two. You want to make sure they
+    // are unacceptable otherwise you may accidentally get copies of
+    // your singleton appearing.
+    Game(Game const&);              // Don't Implement
+    void operator=(Game const&); // Don't implement
+
+
     // game initializations
     void createMapTiles(QString filename);
     void createTilesOverlay(QString filename);

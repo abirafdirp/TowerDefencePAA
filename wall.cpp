@@ -1,4 +1,4 @@
-#include "wall.h"
+#include "Wall.h"
 
 
 Wall::Wall(QGraphicsItem *parent)

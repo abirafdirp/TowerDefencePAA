@@ -13,20 +13,22 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    tower.cpp \
-    game.cpp \
-    wall.cpp \
-    buildwallicon.cpp \
-    enemyblueslime.cpp \
-    tile.cpp
+    Wall.cpp \
+    BuildWallIcon.cpp \
+    EnemyBlueSlime.cpp \
+    Game.cpp \
+    Tile.cpp \
+    Tower.cpp \
+    MyApplication.cpp
 
 HEADERS  += \
-    tower.h \
-    game.h \
-    wall.h \
-    buildwallicon.h \
-    enemyblueslime.h \
-    tile.h
+    Wall.h \
+    Tower.h \
+    Tile.h \
+    Game.h \
+    EnemyBlueSlime.h \
+    BuildWallIcon.h \
+    MyApplication.h
 
 FORMS    +=
 

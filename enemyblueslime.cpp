@@ -1,7 +1,7 @@
-#include "enemyblueslime.h"
+#include "EnemyBlueSlime.h"
 #include <QPixmap>
 #include <QTimer>
-#include "game.h"
+#include "Game.h"
 
 extern Game * game;
 
