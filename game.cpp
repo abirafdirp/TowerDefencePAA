@@ -35,7 +35,7 @@ void Game::createMapTiles(QString filename)
         for(int n = 0; n < map_tiles_y; n++){
 
             // set the floor sprite
-            Tile * tile = new Tile();
+            Tile * tile = new Tile(*this);
             tile->setPixmap(QPixmap(filename));
             tile->setScale(0.5);
             tile->setZValue(0);
@@ -109,12 +109,6 @@ void Game::generatePath(QPoint spawn, QPoint dest)
     }
 }
 
-Game &Game::getInstance()
-{
-    static Game instance;
-    return instance;
-}
-
 void Game::setCursor(QString filename)
 {
     if (cursor){
@@ -154,7 +148,7 @@ void Game::spawnBlueSlime(QPoint point)
     BlueSlime * blueslime = new BlueSlime();
     scene->addItem(blueslime);
     blueslime->setPos(x_scene(point.x()),y_scene(point.y()));
-    QTimer * fps = new QTimer(this);
+    QTimer *fps = new QTimer(this);
     connect(fps,SIGNAL(timeout()),blueslime,SLOT(move()));
     fps->start(1000);
 }
