@@ -2,7 +2,7 @@
 #define MYAPPLICATION
 
 #include <QApplication>
-#include "Game.h"
+
 
 class MyApplication:public QApplication
 {

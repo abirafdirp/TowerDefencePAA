@@ -3,9 +3,11 @@
 #include "EnemyBlueSlime.h"
 #include "Wall.h"
 #include "Tile.h"
+#include "Path.h"
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QGraphicsPixmapItem>
+#include <QGraphicsTextItem>
 #include <QPixmap>
 #include <QMouseEvent>
 #include <QTimer>
@@ -21,48 +23,31 @@ Game::Game()
     setMapTile(19,10,64);
     createScene();
     createMapTiles(":/floor/assets/floor/dirt.png");
-    createTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
+    drawTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
+    drawTilesDebug();
     setCursor(":/wall/assets/wall/brick_red.png");
-    QPoint spawn1 = QPoint(4,5);
-    QPoint dest1 = QPoint(1,8);
-    spawnBlueSlime(spawn1);
+    Tile *spawn1 = tiles.at(tileIndex(19,5));
+    Tile *dest1 = tiles.at(tileIndex(1,4));
+    Path *path = new Path(*this,*spawn1,*dest1);
+    QPoint spawn11 = QPoint(10,5);
+    QPoint dest11 = QPoint(1,5);
+    spawnBlueSlime(spawn11,dest11);
 }
 
 void Game::createMapTiles(QString filename)
 {
-    QList<Tile*> tiles[map_tiles_x][map_tiles_y];
-    for(int i = 0; i < map_tiles_x; i++){
-        for(int n = 0; n < map_tiles_y; n++){
+    for(int x = 0; x < map_width_in_tiles; x++){
+        for(int y = 0; y < map_height_in_tiles; y++){
 
             // set the floor sprite
-            Tile * tile = new Tile(*this);
+            Tile * tile = new Tile(*this, QPoint(x,y));
             tile->setPixmap(QPixmap(filename));
             tile->setScale(0.5);
-            tile->setZValue(0);
-            tile->setPos(i*64,n*64);
-            tile->setPoint(QPoint(i,n));
-            tile->setPointReal(QPoint(this->map_tile_size*i,this->map_tile_size*n));
+            tile->setPos(x*map_tile_size,y*map_tile_size);
+            tile->walkable = true;
 
-            tiles[i][n].append(tile);
+            this->tiles.append(tile);
             scene->addItem(tile);
-        }
-    }
-
-
-}
-
-void Game::createTilesOverlay(QString filename)
-{
-    for(int i = 0; i < map_tiles_x; i++){
-        for(int n = 0; n < map_tiles_y; n++){
-
-            // set the floor overlay
-            QGraphicsPixmapItem * overlay = new QGraphicsPixmapItem();
-            overlay->setPixmap(QPixmap(filename));
-            overlay->setScale(1);
-            overlay->setZValue(100);
-            overlay->setPos(i*64,n*64);
-            scene->addItem(overlay);
         }
     }
 
@@ -71,8 +56,8 @@ void Game::createTilesOverlay(QString filename)
 
 void Game::createScene()
 {
-    int scene_height = map_tiles_y * map_tile_size;
-    int scene_width = map_tiles_x * map_tile_size;
+    int scene_height = map_height_in_tiles * map_tile_size;
+    int scene_width = map_width_in_tiles * map_tile_size;
 
     // create a scene
     scene = new QGraphicsScene(this);
@@ -90,23 +75,9 @@ void Game::createScene()
 
 void Game::setMapTile(int map_tiles_x, int map_tiles_y, int map_tile_size)
 {
-    this->map_tiles_x = map_tiles_x;
-    this->map_tiles_y = map_tiles_y;
+    this->map_width_in_tiles = map_tiles_x;
+    this->map_height_in_tiles = map_tiles_y;
     this->map_tile_size = map_tile_size;
-}
-
-void Game::generatePath(QPoint spawn, QPoint dest)
-{
-    for(int i = 0; i < map_tiles_x; i++){
-        for(int n = 0; n < map_tiles_y; n++){
-
-            // set the floor overlay
-            AStarTile tile;
-            tile.x = i;
-            tile.y = n;
-            tile.walkable = true;
-        }
-    }
 }
 
 void Game::setCursor(QString filename)
@@ -143,11 +114,11 @@ void Game::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void Game::spawnBlueSlime(QPoint point)
+void Game::spawnBlueSlime(QPoint spawn, QPoint dest)
 {
     BlueSlime * blueslime = new BlueSlime();
     scene->addItem(blueslime);
-    blueslime->setPos(x_scene(point.x()),y_scene(point.y()));
+    blueslime->setPos(x_scene(spawn.x()),y_scene(spawn.y()));
     QTimer *fps = new QTimer(this);
     connect(fps,SIGNAL(timeout()),blueslime,SLOT(move()));
     fps->start(1000);
@@ -156,6 +127,11 @@ void Game::spawnBlueSlime(QPoint point)
 int Game::getTileSize()
 {
     return this->map_tile_size;
+}
+
+QList<Tile *> Game::getTiles()
+{
+    return this->tiles;
 }
 
 int Game::x_scene(int x)
@@ -168,8 +144,41 @@ int Game::y_scene(int y)
     return y * this->map_tile_size;
 }
 
-void Game::test()
+int Game::tileIndex(int x, int y)
 {
-    qDebug() << "fuck2";
+    return x + map_height_in_tiles * y;
 }
 
+void Game::drawTilesOverlay(QString filename)
+{
+    for(int i = 0; i < map_width_in_tiles; i++){
+        for(int n = 0; n < map_height_in_tiles; n++){
+
+            // set the floor overlay
+            QGraphicsPixmapItem * overlay = new QGraphicsPixmapItem();
+            overlay->setPixmap(QPixmap(filename));
+            overlay->setScale(1);
+            overlay->setZValue(100);
+            overlay->setPos(i*64,n*64);
+            scene->addItem(overlay);
+        }
+    }
+
+
+}
+
+void Game::drawTilesDebug()
+{
+    for(int index = 0; index < tiles.size(); index++){
+        QGraphicsTextItem *text = new QGraphicsTextItem();
+        int x = tiles[index]->point.x();
+        int y = tiles[index]->point.y();
+
+        qDebug() << tiles[index]->point;
+        text->setPlainText(QString("%1,%2").arg(x).arg(y));
+        text->setPos(x_scene(x),y_scene(y));
+        text->adjustSize();
+        scene->addItem(text);
+    }
+
+}

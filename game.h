@@ -1,7 +1,10 @@
 #ifndef GAME
 #define GAME
-#include <QGraphicsView>
+
 #include "Wall.h"
+#include "Tile.h"
+#include "Enemy.h"
+#include <QGraphicsView>
 
 
 class Game: public QGraphicsView{
@@ -14,66 +17,40 @@ public:
     Wall * build_wall;
 
     // map and tile details
-    int map_tiles_x; // number of tiles in x axis
-    int map_tiles_y;
+    int map_width_in_tiles; // number of tiles in x axis
+    int map_height_in_tiles;
     int map_tile_size; // in pixels
 
-    struct MapTile{
-        QString sprite;
-        int x;
-        int y;
-
-        // map coordinates in real pixels
-        int x_real;
-        int y_real;
-    };
-
-    struct AStarTile{
-        bool walkable;
-        int x;
-        int y;
-
-        // a*
-        int heuristic;
-    };
-
-    // a* pathing
-    QList<MapTile> open;
-    QList<MapTile> closed;
-    QList<AStarTile> a_star_tiles;
-
     // list of all tiles
-    QList<MapTile> tiles;
-
-    // list of path tiles
-    QList<MapTile> path_tiles;
+    QList<Tile*> tiles;
 
     void setCursor(QString filename);
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
 
     // spawning entities
-    void spawnBlueSlime(QPoint);
+    void spawnBlueSlime(QPoint spawn, QPoint dest);
 
     // getter setter
     int getTileSize();
+    QList<Tile*> getTiles();
 
 private:
     // game initializations
     void createMapTiles(QString filename);
-    void createTilesOverlay(QString filename);
     void createScene();
-    void setMapTile(int map_tiles_x, int map_tiles_y, int map_tile_size);
-
-    // pathing
-    void generatePath(QPoint spawn,QPoint dest);
+    void setMapTile(int map_width_in_tiles, int map_height_in_tiles, int map_tile_size);
 
     // convert tile coordinate to scene coordinate
     int x_scene(int x);
     int y_scene(int y);
 
-public slots:
-    void test();
+    // qlist holding the tiles is 1d, so we must implement index function
+    int tileIndex(int x, int y);
+
+    // debugging
+    void drawTilesOverlay(QString filename);
+    void drawTilesDebug();
 
 };
 

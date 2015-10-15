@@ -1,5 +1,6 @@
 #ifndef TOWER
 #define TOWER
+
 #include <QGraphicsPixmapItem>
 
 class Tower: public QGraphicsPixmapItem {

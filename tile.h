@@ -1,23 +1,27 @@
-#ifndef PATHTILE
-#define PATHTILE
-#include <QString>
+#ifndef TILE
+#define TILE
+
 #include <QGraphicsPixmapItem>
 #include <QObject>
-#include "Game.h"
+
+class Game;
 
 class Tile: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 public:
-    Tile(Game &game_,QGraphicsItem * parent=0);
+    Tile(Game &game_, QPoint point, QGraphicsItem * parent=0);
+    int getF();
+
     QPoint point;
     QPoint point_real;
+    bool walkable;
+    int force;
+    int heuristic;
 
-    void setPoint(QPoint point);
-    void setPointReal(QPoint point);
 private:
     Game& game;
 
 };
 
-#endif // PATHTILE
+#endif // TILE
 

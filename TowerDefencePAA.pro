@@ -19,7 +19,9 @@ SOURCES += main.cpp \
     Game.cpp \
     Tile.cpp \
     Tower.cpp \
-    MyApplication.cpp
+    MyApplication.cpp \
+    Enemy.cpp \
+    Path.cpp
 
 HEADERS  += \
     Wall.h \
@@ -28,7 +30,9 @@ HEADERS  += \
     Game.h \
     EnemyBlueSlime.h \
     BuildWallIcon.h \
-    MyApplication.h
+    MyApplication.h \
+    Enemy.h \
+    Path.h
 
 FORMS    +=
 
@@ -36,3 +40,5 @@ RESOURCES += \
     resource.qrc
 
 QMAKE_CXXFLAGS += -std=c++0x
+
+CONFIG+=c++11

@@ -4,19 +4,17 @@
 #include <QPoint>
 #include <QPixmap>
 #include <QDebug>
+#include <QPainter>
 
 
-Tile::Tile(Game &game_, QGraphicsItem *parent) : game(game_)
-{
-
-}
-
-void Tile::setPoint(QPoint point)
+Tile::Tile(Game &game_, QPoint point, QGraphicsItem *parent) : game(game_)
 {
     this->point = point;
+    this->point_real = point * game.getTileSize();
+    setZValue(0);
 }
 
-void Tile::setPointReal(QPoint point)
+int Tile::getF()
 {
-    this->point = point * game.getTileSize();
+    return force + heuristic;
 }
