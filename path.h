@@ -20,9 +20,12 @@ private:
 
     QList<Tile*> path;
     QMap<int,Tile*> open;
-    QList<Tile*> closed;
-    QList<Tile*> tiles;
-    QList<Tile*> adjacent;
+    QMap<int,Tile*> closed; // index
+    QMap<int,Tile*> tiles; // F
+    QMap<int,Tile*> adjacent; // F
+
+    int generateG(Tile &tile);
+    int generateH(Tile &tile);
 
 };
 

@@ -21,8 +21,8 @@ public:
     int map_height_in_tiles;
     int map_tile_size; // in pixels
 
-    // list of all tiles
-    QList<Tile*> tiles;
+    // tiles are indexed in int for easy sorting in QMap. We must use tileCoordinate(x.y) to get an index of a tile
+    QMap<int,Tile*> tiles;
 
     void setCursor(QString filename);
     void mouseMoveEvent(QMouseEvent *event);
@@ -33,7 +33,17 @@ public:
 
     // getter setter
     int getTileSize();
-    QList<Tile*> getTiles();
+    QMap<int,Tile*> getTiles();
+
+    // pathing signal
+    void generatePath();
+
+    // pathing debug
+    void drawOpenRect(int x, int y);
+    void drawClosedRect(int x, int y);
+
+    // tile indexing
+    int indexOfPoint(int x, int y);
 
 private:
     // game initializations
@@ -45,12 +55,14 @@ private:
     int x_scene(int x);
     int y_scene(int y);
 
-    // qlist holding the tiles is 1d, so we must implement index function
-    int tileIndex(int x, int y);
+
 
     // debugging
     void drawTilesOverlay(QString filename);
     void drawTilesDebug();
+
+    //
+    void printAllTiles();
 
 };
 

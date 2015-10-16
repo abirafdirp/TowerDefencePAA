@@ -8,6 +8,7 @@ class MyApplication:public QApplication
 {
 public:
     MyApplication(int argc, char*argv[]);
+    static void delay(int msecs);
 };
 
 #endif // MYAPPLICATION

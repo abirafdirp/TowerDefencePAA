@@ -14,39 +14,45 @@
 #include <QObject>
 #include <QDebug>
 #include <QPoint>
+#include <QMap>
+#include <QMapIterator>
+#include <QGraphicsRectItem>
+#include <QBrush>
 
 Game::Game()
 {
     build_wall = nullptr;
     cursor = nullptr;
     setMouseTracking(true);
-    setMapTile(19,10,64);
+    setMapTile(20,10,64);
     createScene();
     createMapTiles(":/floor/assets/floor/dirt.png");
     drawTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
     drawTilesDebug();
+    //printAllTiles();
     setCursor(":/wall/assets/wall/brick_red.png");
-    Tile *spawn1 = tiles.at(tileIndex(19,5));
-    Tile *dest1 = tiles.at(tileIndex(1,4));
-    Path *path = new Path(*this,*spawn1,*dest1);
-    QPoint spawn11 = QPoint(10,5);
+    QPoint spawn11 = QPoint(1,5);
     QPoint dest11 = QPoint(1,5);
-    spawnBlueSlime(spawn11,dest11);
+}
+
+void Game::generatePath() {
+    Tile *spawn1 = tiles.value(indexOfPoint(1,5));
+    Tile *dest1 = tiles.value(indexOfPoint(18,4));
+    Path *path = new Path(*this,*spawn1,*dest1);
 }
 
 void Game::createMapTiles(QString filename)
 {
     for(int x = 0; x < map_width_in_tiles; x++){
         for(int y = 0; y < map_height_in_tiles; y++){
-
             // set the floor sprite
             Tile * tile = new Tile(*this, QPoint(x,y));
             tile->setPixmap(QPixmap(filename));
             tile->setScale(0.5);
-            tile->setPos(x*map_tile_size,y*map_tile_size);
+            tile->setPos(x_scene(x),y_scene(y));
             tile->walkable = true;
 
-            this->tiles.append(tile);
+            this->tiles.insert(indexOfPoint(x,y),tile);
             scene->addItem(tile);
         }
     }
@@ -129,7 +135,7 @@ int Game::getTileSize()
     return this->map_tile_size;
 }
 
-QList<Tile *> Game::getTiles()
+QMap<int,Tile*> Game::getTiles()
 {
     return this->tiles;
 }
@@ -144,11 +150,10 @@ int Game::y_scene(int y)
     return y * this->map_tile_size;
 }
 
-int Game::tileIndex(int x, int y)
+int Game::indexOfPoint(int x, int y)
 {
-    return x + map_height_in_tiles * y;
+    return x + map_width_in_tiles * y;
 }
-
 void Game::drawTilesOverlay(QString filename)
 {
     for(int i = 0; i < map_width_in_tiles; i++){
@@ -169,15 +174,44 @@ void Game::drawTilesOverlay(QString filename)
 
 void Game::drawTilesDebug()
 {
-    for(int index = 0; index < tiles.size(); index++){
+    QMapIterator<int,Tile*> tile(tiles);
+    while (tile.hasNext()){
+        tile.next();
         QGraphicsTextItem *text = new QGraphicsTextItem();
-        int x = tiles[index]->point.x();
-        int y = tiles[index]->point.y();
+        int x = tile.value()->point.x();
+        int y = tile.value()->point.y();
 
         text->setPlainText(QString("%1,%2").arg(x).arg(y));
         text->setPos(x_scene(x),y_scene(y));
         text->adjustSize();
         scene->addItem(text);
+
     }
 
+}
+
+void Game::printAllTiles()
+{
+    QMapIterator<int,Tile*> tile(tiles);
+    while (tile.hasNext()){
+        tile.next();
+    }
+}
+
+void Game::drawOpenRect(int x, int y)
+{
+    QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(x)+4,y_scene(y)+4,map_tile_size-4,map_tile_size-4);
+    rect->setBrush(QBrush(Qt::yellow));
+    rect->setOpacity(0.5);
+    scene->addItem(rect);
+
+}
+
+void Game::drawClosedRect(int x, int y)
+{
+    QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(x)+4,y_scene(y)+4,map_tile_size-4,map_tile_size-4);
+    rect->setBrush(QBrush(Qt::red));
+    rect->setOpacity(0.3);
+    rect->setZValue(1);
+    scene->addItem(rect);
 }

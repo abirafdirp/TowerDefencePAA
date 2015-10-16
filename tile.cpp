@@ -14,7 +14,9 @@ Tile::Tile(Game &game_, QPoint point, QGraphicsItem *parent) : game(game_)
     setZValue(0);
 }
 
-int Tile::getF()
+int Tile::processF()
 {
     return g + h;
 }
+
+

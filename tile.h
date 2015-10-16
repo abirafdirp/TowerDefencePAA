@@ -10,17 +10,19 @@ class Tile: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 public:
     Tile(Game &game_, QPoint point, QGraphicsItem * parent=0);
-    int getF();
+    int processF();
 
     QPoint point;
     QPoint point_real;
     bool walkable;
     int h;
     int g;
+    int f;
+    Tile *parent_tile;
 
 private:
     Game& game;
-    int f;
+
 
 };
 
