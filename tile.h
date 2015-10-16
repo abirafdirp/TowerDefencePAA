@@ -15,11 +15,12 @@ public:
     QPoint point;
     QPoint point_real;
     bool walkable;
-    int force;
-    int heuristic;
+    int h;
+    int g;
 
 private:
     Game& game;
+    int f;
 
 };
 

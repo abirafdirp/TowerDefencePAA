@@ -174,7 +174,6 @@ void Game::drawTilesDebug()
         int x = tiles[index]->point.x();
         int y = tiles[index]->point.y();
 
-        qDebug() << tiles[index]->point;
         text->setPlainText(QString("%1,%2").arg(x).arg(y));
         text->setPos(x_scene(x),y_scene(y));
         text->adjustSize();

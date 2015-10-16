@@ -16,5 +16,5 @@ Tile::Tile(Game &game_, QPoint point, QGraphicsItem *parent) : game(game_)
 
 int Tile::getF()
 {
-    return force + heuristic;
+    return g + h;
 }
