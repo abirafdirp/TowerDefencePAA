@@ -14,7 +14,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
     spawn.g = 0;
     spawn.h = 0;
     spawn.f = spawn.processF();
-    open.insert(spawn.f,&spawn);
+    open.insertMulti(spawn.f,&spawn);
 
     while (!open.empty()){
 
@@ -41,11 +41,6 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         for(int adjacentXOffset=-1;adjacentXOffset <=1;adjacentXOffset++){
             for(int adjacentYOffset=-1;adjacentYOffset <=1;adjacentYOffset++){
 
-                // ignore the current tile
-                if ((adjacentXOffset == 0) && (adjacentYOffset == 0)){
-                    continue;
-                }
-
                 // make a reference to that tile
                 int adjacentPointX = current->point.x() + adjacentXOffset;
                 int adjacentPointY = current->point.y() + adjacentYOffset;
@@ -57,7 +52,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
                 }
 
 
-                // if the adjacent tile is not in open map and not in closed tiles
+                // if the adjacent tile is not in open map
                 if (!openContains(*adjacent_tile)){
                     adjacent_tile->parent_tile = current;
 
@@ -84,24 +79,10 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
                     game.drawOpenRect(adjacentPointX,adjacentPointY);
                 }
 
-                /*else if ((openContains(*adjacent_tile)) && (!closedContains(*adjacent_tile))){
-                    // determine the G
-                    if ((adjacentXOffset == adjacentYOffset) || (adjacentXOffset + adjacentYOffset == 0)){
-                        adjacent_tile->g = current->g + 14;
-                    }
-                    else {
-                        adjacent_tile->g = current->g + 10;
-                    }
+                else{
 
-                    // determine the H using manhattan
-                    int manhattan = 10 * (abs(dest.point.x() - adjacent_tile->point.x()) + abs(dest.point.y() - adjacent_tile->point.y()));
-                    adjacent_tile->h = manhattan;
 
-                    // determine F
-                    adjacent_tile->f = adjacent_tile->processF();
-                    updateTileDebug(*adjacent_tile);
-
-                }*/
+                }
 
 
             } //endfor
