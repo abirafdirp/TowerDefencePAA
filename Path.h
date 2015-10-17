@@ -21,13 +21,17 @@ private:
     QList<Tile*> path;
 
     // QMap is sorted based on its keys
-    QMap<int,Tile*> open;
+    QMap<int,Tile*> open; // F as key
     QMap<int,Tile*> closed; // index as key
-    QMap<int,Tile*> tiles; // F as key
-    QMap<int,Tile*> adjacent; // F as key
+    QMap<int,Tile*> tiles; // index as key
+    // QMap<int,Tile*> adjacent; // F as key
 
-    void drawTileDebug(Tile &game);
+    void drawTileDebug(Tile &tile);
+    void updateTileDebug(Tile &tile);
     bool openContains(Tile &tile);
+    bool closedContains(Tile &tile);
+
+    void printOpen();
 
 };
 

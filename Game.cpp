@@ -28,7 +28,7 @@ Game::Game()
     createScene();
     createMapTiles(":/floor/assets/floor/dirt.png");
     drawTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
-    drawTilesDebug();
+    //drawTilesDebug();
     //printAllTiles();
     setCursor(":/wall/assets/wall/brick_red.png");
     QPoint spawn11 = QPoint(1,5);
@@ -37,7 +37,7 @@ Game::Game()
 
 void Game::generatePath() {
     Tile *spawn1 = tiles.value(indexOfPoint(1,5));
-    Tile *dest1 = tiles.value(indexOfPoint(18,4));
+    Tile *dest1 = tiles.value(indexOfPoint(11,5));
     Path *path = new Path(*this,*spawn1,*dest1);
 }
 
@@ -51,6 +51,15 @@ void Game::createMapTiles(QString filename)
             tile->setScale(0.5);
             tile->setPos(x_scene(x),y_scene(y));
             tile->walkable = true;
+            if ((y == 4) || (y == 5) || (y == 6) || (y == 7) || (y == 3)){
+                tile->setPixmap(QPixmap(":/wall/assets/wall/brick_red.png"));
+                tile->walkable = false;
+            }
+            if (x % 2 == 1){
+                tile->setPixmap(QPixmap(filename));
+                tile->walkable = true;
+            }
+
 
             this->tiles.insert(indexOfPoint(x,y),tile);
             scene->addItem(tile);
@@ -202,7 +211,6 @@ void Game::drawOpenRect(int x, int y)
 {
     QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(x)+4,y_scene(y)+4,map_tile_size-4,map_tile_size-4);
     rect->setBrush(QBrush(Qt::yellow));
-    rect->setOpacity(0.5);
     scene->addItem(rect);
 
 }
@@ -211,7 +219,6 @@ void Game::drawClosedRect(int x, int y)
 {
     QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(x)+4,y_scene(y)+4,map_tile_size-4,map_tile_size-4);
     rect->setBrush(QBrush(Qt::red));
-    rect->setOpacity(0.3);
     rect->setZValue(1);
     scene->addItem(rect);
 }
