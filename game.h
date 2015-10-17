@@ -45,17 +45,15 @@ public:
     // tile indexing
     int indexOfPoint(int x, int y);
 
+    // convert tile coordinate to scene coordinate
+    int x_scene(int x);
+    int y_scene(int y);
+
 private:
     // game initializations
     void createMapTiles(QString filename);
     void createScene();
     void setMapTile(int map_width_in_tiles, int map_height_in_tiles, int map_tile_size);
-
-    // convert tile coordinate to scene coordinate
-    int x_scene(int x);
-    int y_scene(int y);
-
-
 
     // debugging
     void drawTilesOverlay(QString filename);
