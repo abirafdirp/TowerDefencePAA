@@ -20,7 +20,6 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
 
         // look for the lowest F, because QMap is sorted we take the first tile
         current = open.first();
-        // qDebug() << current->point.x() << " " << current->point.y();
 
         int current_x_point = current->point.x() ;
         int current_y_point = current->point.y() ;
@@ -53,7 +52,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
 
 
                 // if the adjacent tile is not in open map
-                if (!openContains(*adjacent_tile)){
+                if ( (adjacent_tile->g < current->g) || (!openContains(*adjacent_tile))){
                     adjacent_tile->parent_tile = current;
 
                     // determine the G
@@ -77,11 +76,6 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
 
                     // DEBUG
                     game.drawOpenRect(adjacentPointX,adjacentPointY);
-                }
-
-                else{
-
-
                 }
 
 
