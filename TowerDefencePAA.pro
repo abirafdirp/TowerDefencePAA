@@ -14,14 +14,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     Wall.cpp \
-    BuildWallIcon.cpp \
     EnemyBlueSlime.cpp \
     Game.cpp \
     Tile.cpp \
     Tower.cpp \
     MyApplication.cpp \
     Enemy.cpp \
-    Path.cpp
+    Path.cpp \
+    BuildWall.cpp
 
 HEADERS  += \
     Wall.h \
@@ -29,10 +29,10 @@ HEADERS  += \
     Tile.h \
     Game.h \
     EnemyBlueSlime.h \
-    BuildWallIcon.h \
     MyApplication.h \
     Enemy.h \
-    Path.h
+    Path.h \
+    BuildWall.h
 
 FORMS    +=
 

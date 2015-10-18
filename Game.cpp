@@ -2,6 +2,7 @@
 #include "Tower.h"
 #include "EnemyBlueSlime.h"
 #include "Wall.h"
+#include "BuildWall.h"
 #include "Tile.h"
 #include "Path.h"
 #include <QGraphicsScene>
@@ -11,7 +12,6 @@
 #include <QPixmap>
 #include <QMouseEvent>
 #include <QTimer>
-#include <QObject>
 #include <QDebug>
 #include <QPoint>
 #include <QMap>
@@ -21,23 +21,32 @@
 
 Game::Game()
 {
-    build_wall = nullptr;
-    cursor = nullptr;
-    setMouseTracking(true);
-    setMapTile(20,10,64);
+    setMapTile(20,10,64); // but start from 0
     createScene();
     createMapTiles(":/floor/assets/floor/dirt.png");
     //drawTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
-    //drawTilesDebug();
+    //drawTilesPoint();
     //printAllTiles();
-    setCursor(":/wall/assets/wall/brick_red.png");
     QPoint spawn11 = QPoint(1,5);
     QPoint dest11 = QPoint(1,5);
+
+    QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(1)+4,y_scene(5)+4,map_tile_size-4,map_tile_size-4);
+    rect->setBrush(QBrush(Qt::gray));
+    rect->setZValue(100000);
+    scene->addItem(rect);
+
+    QGraphicsRectItem *rect2 = new QGraphicsRectItem(x_scene(19)+4,y_scene(5)+4,map_tile_size-4,map_tile_size-4);
+    rect2->setBrush(QBrush(Qt::gray));
+    rect2->setZValue(100000);
+    scene->addItem(rect2);
+
+    BuildWall *wall = new BuildWall(*this);
 }
 
 void Game::generatePath() {
     Tile *spawn1 = tiles.value(indexOfPoint(1,5));
-    Tile *dest1 = tiles.value(indexOfPoint(11,5));
+    Tile *dest1 = tiles.value(indexOfPoint(19,5));
+
     Path *path = new Path(*this,*spawn1,*dest1);
 }
 
@@ -51,6 +60,9 @@ void Game::createMapTiles(QString filename)
             tile->setScale(0.5);
             tile->setPos(x_scene(x),y_scene(y));
             tile->walkable = true;
+            tile->parent_tile = nullptr;
+
+            /* randomize wall
             if ((y == 4) || (y == 5) || (y == 6) || (y == 7) || (y == 3)){
                 tile->setPixmap(QPixmap(":/wall/assets/wall/brick_red.png"));
                 tile->walkable = false;
@@ -58,7 +70,7 @@ void Game::createMapTiles(QString filename)
             if (x % 2 == 1){
                 tile->setPixmap(QPixmap(filename));
                 tile->walkable = true;
-            }
+            }*/
 
 
             this->tiles.insert(indexOfPoint(x,y),tile);
@@ -88,45 +100,11 @@ void Game::createScene()
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
-void Game::setMapTile(int map_tiles_x, int map_tiles_y, int map_tile_size)
+void Game::setMapTile(int map_tiles_x, int map_tiles_y, int map_tile_size_)
 {
-    this->map_width_in_tiles = map_tiles_x;
-    this->map_height_in_tiles = map_tiles_y;
-    this->map_tile_size = map_tile_size;
-}
-
-void Game::setCursor(QString filename)
-{
-    if (cursor){
-        scene->removeItem(cursor);
-        delete cursor;
-    }
-
-    cursor = new QGraphicsPixmapItem();
-    cursor->setPixmap(QPixmap(filename));
-    cursor->setScale(0.5);
-    cursor->setZValue(1);
-    scene->addItem(cursor);
-}
-
-void Game::mouseMoveEvent(QMouseEvent * event)
-{
-    if (cursor){
-        cursor->setPos(event->pos());
-    }
-}
-
-void Game::mousePressEvent(QMouseEvent *event)
-{
-    if (build_wall){
-        scene->addItem(build_wall);
-        build_wall->setPos(event->pos());
-        cursor = nullptr;
-        build_wall = nullptr;
-    }
-    else {
-        QGraphicsView::mousePressEvent(event);
-    }
+    map_width_in_tiles = map_tiles_x;
+    map_height_in_tiles = map_tiles_y;
+    map_tile_size = map_tile_size_;
 }
 
 void Game::spawnBlueSlime(QPoint spawn, QPoint dest)
@@ -205,23 +183,4 @@ void Game::printAllTiles()
     while (tile.hasNext()){
         tile.next();
     }
-}
-
-void Game::drawOpenRect(int x, int y)
-{
-    update_z_index++;
-    QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(x)+4,y_scene(y)+4,map_tile_size-4,map_tile_size-4);
-    rect->setBrush(QBrush(Qt::yellow));
-    rect->setZValue(update_z_index);
-    scene->addItem(rect);
-
-}
-
-void Game::drawClosedRect(int x, int y)
-{
-    update_z_index++;
-    QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(x)+4,y_scene(y)+4,map_tile_size-4,map_tile_size-4);
-    rect->setBrush(QBrush(Qt::red));
-    rect->setZValue(++update_z_index);
-    scene->addItem(rect);
 }

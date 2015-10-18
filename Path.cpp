@@ -3,10 +3,11 @@
 #include "MyApplication.h"
 #include <QDebug>
 #include <QMapIterator>
+#include <QListIterator>
 
 Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_), dest(dest_)
 {
-    int indexdebug = 0;
+    //int indexdebug = 0;
 
     QMap<int,Tile*> tiles = game.getTiles();
 
@@ -34,7 +35,8 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         // switch it to closed map
         open.take(open.firstKey());
         closed.insertMulti(game.indexOfPoint(current->point.x(),current->point.y()),current);
-        game.drawClosedRect(current_x_point,current_y_point);
+        //drawClosedRect(current_x_point,current_y_point);
+        drawTileDebug(*current);
 
         // generate adjacent tiles and process it
         for(int adjacentXOffset=-1;adjacentXOffset <=1;adjacentXOffset++){
@@ -61,7 +63,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
                 // if the adjacent tile is not in open map
                 if ((!openContains(*adjacent_tile)) || tentative_g < adjacent_tile->g ){
                     adjacent_tile->parent_tile = current;
-                    drawTileParent(*adjacent_tile,*current);
+                    //drawTileParent(*adjacent_tile,*current);
 
                     // determine the G
                     if ((adjacentXOffset == adjacentYOffset) || (adjacentXOffset + adjacentYOffset == 0)){
@@ -80,122 +82,24 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
 
                     // add to open after processing F
                     open.insertMulti(adjacent_tile->f,adjacent_tile);
-                    drawTileFGH(*adjacent_tile);
+                    //drawTileFGH(*adjacent_tile);
 
                     // DEBUG
-                    game.drawOpenRect(adjacentPointX,adjacentPointY);
+                    //drawOpenRect(adjacentPointX,adjacentPointY);
+                    drawTileDebug(*adjacent_tile);
                 }
 
             } //endfor
         } //endfor
-        qDebug() << indexdebug;
-        indexdebug++;
-        printOpen();
-        MyApplication::delay(100);
+        update_z_index++;
+        //qDebug() << indexdebug;
+        //indexdebug++;
+        //printOpen();
+        MyApplication::delay(50);
     } // end while
+    reconstructPath();
+    printPath();
 }
-
-void Path::drawTileFGH(Tile &tile)
-{
-    update_z_index++;
-    QGraphicsTextItem *text = new QGraphicsTextItem();
-    int x = tile.point.x();
-    int y = tile.point.y();
-    int f = tile.f;
-    int g = tile.g;
-    int h = tile.h;
-
-    text->setPlainText(QString("F : %1 \nG : %2 \nH : %3").arg(f).arg(g).arg(h));
-    text->setPos(game.x_scene(x),game.y_scene(y));
-    text->adjustSize();
-    text->setZValue(++update_z_index);
-    game.scene->addItem(text);
-
-}
-
-void Path::drawTileParent(Tile &tile, Tile &parent)
-{
-    update_z_index++;
-    QGraphicsPixmapItem *arrow = new QGraphicsPixmapItem(QPixmap(":/util/assets/util/arrowUp.png"));
-    arrow->setScale(0.5);
-    arrow->setZValue(++update_z_index);
-    arrow->setTransformOriginPoint(arrow->boundingRect().center());
-
-    int tile_point_x = tile.point.x();
-    int tile_point_y = tile.point.y();
-    int tile_center_x = (game.x_scene(tile_point_x));
-    int tile_center_y = (game.y_scene(tile_point_y));
-    QPoint tile_center = QPoint(tile_center_x,tile_center_y);
-
-    arrow->setPos(tile_center);
-    if (parent.point.x() > tile.point.x()){
-        if (parent.point.y() > tile.point.y()){
-            arrow->setRotation(135);
-        }
-        else if(parent.point.y() < tile.point.y()){
-            arrow->setRotation(45);
-        }
-        else {
-           arrow->setRotation(90);
-        }
-    }
-    else if (parent.point.x() < tile.point.x()){
-        if (parent.point.y() > tile.point.y()){
-            arrow->setRotation(-135);
-        }
-        else if(parent.point.y() < tile.point.y()){
-            arrow->setRotation(-45);
-        }
-        else {
-           arrow->setRotation(-90);
-        }
-    }
-    else if ((parent.point.x() == tile.point.x()) && (parent.point.y() > tile.point.y())){
-        arrow->setRotation(180);
-    }
-
-    game.scene->addItem(arrow);
-
-    /*QGraphicsPixmapItem *arrow = new QGraphicsPixmapItem(QPixmap(":/util/assets/util/arrowUp.png"));
-
-    // arrow in assets is 100px
-    arrow->setScale(0.5);
-
-    // check every adjacent tile if it is this tile parent or not
-    for(int adjacentXOffset=-1;adjacentXOffset <=1;adjacentXOffset++){
-        for(int adjacentYOffset=-1;adjacentYOffset <=1;adjacentYOffset++){
-
-            // if the adjacent tile is the parent, rotate the arrow to that tile
-            Tile adjacent_tile = tiles.value(game.indexOfPoint(tile.point.x()+adjacentXOffset,tile.point.y()+adjacentYOffset));
-            if (tile.parent() == adjacent_tile){
-                qDebug() << "fak";
-            }
-        }
-    }*/
-}
-
-void Path::updateTileDebug(Tile &tile)
-{
-    update_z_index++;
-    QGraphicsTextItem *text = new QGraphicsTextItem();
-    int x = tile.point.x();
-    int y = tile.point.y();
-    int f = tile.f;
-    int g = tile.g;
-    int h = tile.h;
-
-    text->setPlainText(QString("F : %1 \nG : %2 \nH : %3").arg(f).arg(g).arg(h));
-    text->setPos(game.x_scene(x),game.y_scene(y));
-    text->adjustSize();
-    text->setZValue(++update_z_index);
-    game.scene->addItem(text);
-
-    QGraphicsRectItem *rect = new QGraphicsRectItem(game.x_scene(x)+4,game.y_scene(y)+4,game.map_tile_size-4,game.map_tile_size-4);
-    rect->setBrush(QBrush(Qt::yellow));
-    rect->setZValue(update_z_index);
-    game.scene->addItem(rect);
-}
-
 bool Path::openContains(Tile &tile)
 {
     Tile *tile_to_be_checked = &tile;
@@ -235,4 +139,106 @@ void Path::printOpen()
     qDebug() << "END";
 }
 
+void Path::reconstructPath()
+{
+    Tile *current = &dest;
+    while (1){
+        path.append(current);
+        current = current->parent_tile;
+        if ((current->point.x() == spawn.point.x()) && (current->point.y() == spawn.point.y())){
+            break;
+        }
+    }
+}
+
+void Path::drawTileDebug(Tile &tile)
+{
+    update_z_index+=1;
+    int x = tile.point.x();
+    int y = tile.point.y();
+
+    if (!closedContains(tile)){
+        QGraphicsRectItem *rect = new QGraphicsRectItem(game.x_scene(x)+4,game.y_scene(y)+4,game.map_tile_size-4,game.map_tile_size-4);
+        rect->setBrush(QBrush(Qt::yellow));
+        rect->setZValue(update_z_index);
+        game.scene->addItem(rect);
+    }
+
+    else {
+        QGraphicsRectItem *rect = new QGraphicsRectItem(game.x_scene(x)+4,game.y_scene(y)+4,game.map_tile_size-4,game.map_tile_size-4);
+        rect->setBrush(QBrush(Qt::red));
+        rect->setZValue(update_z_index);
+        game.scene->addItem(rect);
+    }
+
+    if (tile.parent_tile != nullptr){
+        Tile *parent = tile.parent_tile;
+        QGraphicsPixmapItem *arrow = new QGraphicsPixmapItem(QPixmap(":/util/assets/util/arrowUp.png"));
+        arrow->setScale(0.35);
+        arrow->setZValue(update_z_index+10);
+        arrow->setTransformOriginPoint(arrow->boundingRect().center());
+
+        int tile_point_x = tile.point.x();
+        int tile_point_y = tile.point.y();
+        int tile_center_x = (game.x_scene(tile_point_x));
+        int tile_center_y = (game.y_scene(tile_point_y));
+        QPoint tile_center = QPoint(tile_center_x,tile_center_y);
+
+        arrow->setPos(tile_center);
+        if (parent->point.x() > tile.point.x()){
+            if (parent->point.y() > tile.point.y()){
+                arrow->setRotation(135);
+            }
+            else if(parent->point.y() < tile.point.y()){
+                arrow->setRotation(45);
+            }
+            else {
+               arrow->setRotation(90);
+            }
+        }
+        else if (parent->point.x() < tile.point.x()){
+            if (parent->point.y() > tile.point.y()){
+                arrow->setRotation(-135);
+            }
+            else if(parent->point.y() < tile.point.y()){
+                arrow->setRotation(-45);
+            }
+            else {
+               arrow->setRotation(-90);
+            }
+        }
+        else if ((parent->point.x() == tile.point.x()) && (parent->point.y() > tile.point.y())){
+            arrow->setRotation(180);
+        }
+
+        game.scene->addItem(arrow);
+    }
+
+    QGraphicsTextItem *text = new QGraphicsTextItem();
+    x = tile.point.x();
+    y = tile.point.y();
+    int f = tile.f;
+    int g = tile.g;
+    int h = tile.h;
+
+    text->setPlainText(QString("F : %1 \nG : %2 \nH : %3").arg(f).arg(g).arg(h));
+    text->setPos(game.x_scene(x),game.y_scene(y));
+    text->adjustSize();
+    text->setZValue(update_z_index+10);
+    game.scene->addItem(text);
+
+}
+
+void Path::printPath()
+{
+    foreach (Tile *tile, path) {
+        int x = tile->point.x();
+        int y = tile->point.y();
+        qDebug() << x << "," << y;
+        QGraphicsRectItem *rect = new QGraphicsRectItem(game.x_scene(x)+20,game.y_scene(y)+20,game.map_tile_size-20,game.map_tile_size-20);
+        rect->setBrush(QBrush(Qt::green));
+        rect->setZValue(10000);
+        game.scene->addItem(rect);
+    }
+}
 

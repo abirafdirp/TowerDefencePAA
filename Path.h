@@ -10,11 +10,12 @@ class Tile;
 class Path{
 public:
     Path(Game &game_, Tile &spawn_, Tile &dest_);
+    QList<Tile*> getPath();
+    Game &game;
 
 private:
-    // we want to redraw everything after a tile gets updated. this is a bad behaviour
-    int update_z_index = 102;
-    Game &game;
+    // we want to redraw everything after a tile gets updated,
+    int update_z_index = 150;
     Tile &spawn;
     Tile &dest;
 
@@ -26,15 +27,18 @@ private:
     QMap<int,Tile*> open; // F as key
     QMap<int,Tile*> closed; // index as key
     QMap<int,Tile*> tiles; // index as key
-    // QMap<int,Tile*> adjacent; // F as key
 
-    void drawTileFGH(Tile &tile);
-    void drawTileParent(Tile &tile, Tile &parent);
-    void updateTileDebug(Tile &tile);
+    // pathing debug
+    void drawTileDebug(Tile &tile);
+    void printPath();
+    void printOpen();
+
+    // tiles are inside maps
     bool openContains(Tile &tile);
     bool closedContains(Tile &tile);
 
-    void printOpen();
+
+    void reconstructPath();
 
 };
 

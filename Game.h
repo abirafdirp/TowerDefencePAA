@@ -12,7 +12,6 @@ class Game: public QGraphicsView{
 public:
     Game();
 
-    QGraphicsPixmapItem * cursor;
     QGraphicsScene * scene;
     Wall * build_wall;
 
@@ -24,10 +23,6 @@ public:
     // tiles are indexed in int for easy sorting in QMap. We must use tileCoordinate(x.y) to get an index of a tile
     QMap<int,Tile*> tiles;
 
-    void setCursor(QString filename);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-
     // spawning entities
     void spawnBlueSlime(QPoint spawn, QPoint dest);
 
@@ -38,10 +33,6 @@ public:
     // pathing signal
     void generatePath();
 
-    // pathing debug
-    void drawOpenRect(int x, int y);
-    void drawClosedRect(int x, int y);
-
     // tile indexing
     int indexOfPoint(int x, int y);
 
@@ -50,12 +41,11 @@ public:
     int y_scene(int y);
 
 private:
-    int update_z_index = 100;
 
     // game initializations
     void createMapTiles(QString filename);
     void createScene();
-    void setMapTile(int map_width_in_tiles, int map_height_in_tiles, int map_tile_size);
+    void setMapTile(int map_width_in_tiles, int map_height_in_tiles, int map_tile_size_);
 
     // debugging
     void drawTilesOverlay(QString filename);
