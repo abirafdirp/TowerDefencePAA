@@ -50,6 +50,8 @@ public:
     int y_scene(int y);
 
 private:
+    int update_z_index = 100;
+
     // game initializations
     void createMapTiles(QString filename);
     void createScene();
@@ -57,7 +59,7 @@ private:
 
     // debugging
     void drawTilesOverlay(QString filename);
-    void drawTilesDebug();
+    void drawTilesPoint();
 
     //
     void printAllTiles();

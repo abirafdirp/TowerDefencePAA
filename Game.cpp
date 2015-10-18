@@ -27,7 +27,7 @@ Game::Game()
     setMapTile(20,10,64);
     createScene();
     createMapTiles(":/floor/assets/floor/dirt.png");
-    drawTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
+    //drawTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
     //drawTilesDebug();
     //printAllTiles();
     setCursor(":/wall/assets/wall/brick_red.png");
@@ -181,7 +181,7 @@ void Game::drawTilesOverlay(QString filename)
 
 }
 
-void Game::drawTilesDebug()
+void Game::drawTilesPoint()
 {
     QMapIterator<int,Tile*> tile(tiles);
     while (tile.hasNext()){
@@ -209,16 +209,19 @@ void Game::printAllTiles()
 
 void Game::drawOpenRect(int x, int y)
 {
+    update_z_index++;
     QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(x)+4,y_scene(y)+4,map_tile_size-4,map_tile_size-4);
     rect->setBrush(QBrush(Qt::yellow));
+    rect->setZValue(update_z_index);
     scene->addItem(rect);
 
 }
 
 void Game::drawClosedRect(int x, int y)
 {
+    update_z_index++;
     QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(x)+4,y_scene(y)+4,map_tile_size-4,map_tile_size-4);
     rect->setBrush(QBrush(Qt::red));
-    rect->setZValue(1);
+    rect->setZValue(++update_z_index);
     scene->addItem(rect);
 }

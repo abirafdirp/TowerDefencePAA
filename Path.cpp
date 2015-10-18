@@ -40,10 +40,17 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         for(int adjacentXOffset=-1;adjacentXOffset <=1;adjacentXOffset++){
             for(int adjacentYOffset=-1;adjacentYOffset <=1;adjacentYOffset++){
 
-                // make a reference to that tile
+                /* validate the adjacent point, if it goes out of the map then ignore it,
+                 * if not make a reference to that tile */
                 int adjacentPointX = current->point.x() + adjacentXOffset;
                 int adjacentPointY = current->point.y() + adjacentYOffset;
+                if ((adjacentPointX >= game.map_width_in_tiles) || (adjacentPointY >= game.map_height_in_tiles) || (adjacentPointX < 0) || (adjacentPointY < 0)){
+                    continue;
+                }
                 Tile *adjacent_tile = tiles.value(game.indexOfPoint(adjacentPointX,adjacentPointY));
+
+                // tentative g
+                int tentative_g = current->g + (abs(current->h - adjacent_tile->h));
 
                 // if the adjacent tile is not walkable or is in closed map then ignore it
                 if ( (!adjacent_tile->walkable) || (closedContains(*adjacent_tile)) ) {
@@ -52,8 +59,9 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
 
 
                 // if the adjacent tile is not in open map
-                if ( (adjacent_tile->g < current->g) || (!openContains(*adjacent_tile))){
+                if ((!openContains(*adjacent_tile)) || tentative_g < adjacent_tile->g ){
                     adjacent_tile->parent_tile = current;
+                    drawTileParent(*adjacent_tile,*current);
 
                     // determine the G
                     if ((adjacentXOffset == adjacentYOffset) || (adjacentXOffset + adjacentYOffset == 0)){
@@ -70,26 +78,26 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
                     // determine F
                     adjacent_tile->f = adjacent_tile->processF();
 
-                    // add to open  after processing F
+                    // add to open after processing F
                     open.insertMulti(adjacent_tile->f,adjacent_tile);
-                    drawTileDebug(*adjacent_tile);
+                    drawTileFGH(*adjacent_tile);
 
                     // DEBUG
                     game.drawOpenRect(adjacentPointX,adjacentPointY);
                 }
-
 
             } //endfor
         } //endfor
         qDebug() << indexdebug;
         indexdebug++;
         printOpen();
-        MyApplication::delay(500);
+        MyApplication::delay(100);
     } // end while
 }
 
-void Path::drawTileDebug(Tile &tile)
+void Path::drawTileFGH(Tile &tile)
 {
+    update_z_index++;
     QGraphicsTextItem *text = new QGraphicsTextItem();
     int x = tile.point.x();
     int y = tile.point.y();
@@ -100,14 +108,75 @@ void Path::drawTileDebug(Tile &tile)
     text->setPlainText(QString("F : %1 \nG : %2 \nH : %3").arg(f).arg(g).arg(h));
     text->setPos(game.x_scene(x),game.y_scene(y));
     text->adjustSize();
-    text->setZValue(100);
+    text->setZValue(++update_z_index);
     game.scene->addItem(text);
 
+}
+
+void Path::drawTileParent(Tile &tile, Tile &parent)
+{
+    update_z_index++;
+    QGraphicsPixmapItem *arrow = new QGraphicsPixmapItem(QPixmap(":/util/assets/util/arrowUp.png"));
+    arrow->setScale(0.5);
+    arrow->setZValue(++update_z_index);
+    arrow->setTransformOriginPoint(arrow->boundingRect().center());
+
+    int tile_point_x = tile.point.x();
+    int tile_point_y = tile.point.y();
+    int tile_center_x = (game.x_scene(tile_point_x));
+    int tile_center_y = (game.y_scene(tile_point_y));
+    QPoint tile_center = QPoint(tile_center_x,tile_center_y);
+
+    arrow->setPos(tile_center);
+    if (parent.point.x() > tile.point.x()){
+        if (parent.point.y() > tile.point.y()){
+            arrow->setRotation(135);
+        }
+        else if(parent.point.y() < tile.point.y()){
+            arrow->setRotation(45);
+        }
+        else {
+           arrow->setRotation(90);
+        }
+    }
+    else if (parent.point.x() < tile.point.x()){
+        if (parent.point.y() > tile.point.y()){
+            arrow->setRotation(-135);
+        }
+        else if(parent.point.y() < tile.point.y()){
+            arrow->setRotation(-45);
+        }
+        else {
+           arrow->setRotation(-90);
+        }
+    }
+    else if ((parent.point.x() == tile.point.x()) && (parent.point.y() > tile.point.y())){
+        arrow->setRotation(180);
+    }
+
+    game.scene->addItem(arrow);
+
+    /*QGraphicsPixmapItem *arrow = new QGraphicsPixmapItem(QPixmap(":/util/assets/util/arrowUp.png"));
+
+    // arrow in assets is 100px
+    arrow->setScale(0.5);
+
+    // check every adjacent tile if it is this tile parent or not
+    for(int adjacentXOffset=-1;adjacentXOffset <=1;adjacentXOffset++){
+        for(int adjacentYOffset=-1;adjacentYOffset <=1;adjacentYOffset++){
+
+            // if the adjacent tile is the parent, rotate the arrow to that tile
+            Tile adjacent_tile = tiles.value(game.indexOfPoint(tile.point.x()+adjacentXOffset,tile.point.y()+adjacentYOffset));
+            if (tile.parent() == adjacent_tile){
+                qDebug() << "fak";
+            }
+        }
+    }*/
 }
 
 void Path::updateTileDebug(Tile &tile)
 {
-
+    update_z_index++;
     QGraphicsTextItem *text = new QGraphicsTextItem();
     int x = tile.point.x();
     int y = tile.point.y();
@@ -118,12 +187,12 @@ void Path::updateTileDebug(Tile &tile)
     text->setPlainText(QString("F : %1 \nG : %2 \nH : %3").arg(f).arg(g).arg(h));
     text->setPos(game.x_scene(x),game.y_scene(y));
     text->adjustSize();
-    text->setZValue(102);
+    text->setZValue(++update_z_index);
     game.scene->addItem(text);
 
     QGraphicsRectItem *rect = new QGraphicsRectItem(game.x_scene(x)+4,game.y_scene(y)+4,game.map_tile_size-4,game.map_tile_size-4);
     rect->setBrush(QBrush(Qt::yellow));
-    rect->setZValue(101);
+    rect->setZValue(update_z_index);
     game.scene->addItem(rect);
 }
 
