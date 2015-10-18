@@ -52,7 +52,13 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
                 Tile *adjacent_tile = tiles.value(game.indexOfPoint(adjacentPointX,adjacentPointY));
 
                 // tentative g
-                int tentative_g = current->g + (abs(current->h - adjacent_tile->h));
+                int tentative_g;
+                if ((adjacentXOffset == adjacentYOffset) || (adjacentXOffset + adjacentYOffset == 0)){
+                    tentative_g = current->g + 14;
+                }
+                else {
+                    tentative_g = current->g + 10;
+                }
 
                 // if the adjacent tile is not walkable or is in closed map then ignore it
                 if ( (!adjacent_tile->walkable) || (closedContains(*adjacent_tile)) ) {
@@ -61,7 +67,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
 
 
                 // if the adjacent tile is not in open map
-                if ((!openContains(*adjacent_tile)) || tentative_g < adjacent_tile->g ){
+                if ((!openContains(*adjacent_tile)) || tentative_g < adjacent_tile->g){
                     adjacent_tile->parent_tile = current;
                     //drawTileParent(*adjacent_tile,*current);
 
@@ -95,10 +101,10 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         //qDebug() << indexdebug;
         //indexdebug++;
         //printOpen();
-        MyApplication::delay(20);
+        MyApplication::delay(100);
     } // end while
     reconstructPath();
-    printPath();
+    //printPath();
 }
 bool Path::openContains(Tile &tile)
 {
