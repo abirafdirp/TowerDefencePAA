@@ -1,6 +1,6 @@
 A* pathfind
 ==============================
-My first real project with C++ and Qt 5.4
+My first project with C++ and Qt 5.4
 Still in development
 
 Demo
