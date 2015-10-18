@@ -95,7 +95,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         //qDebug() << indexdebug;
         //indexdebug++;
         //printOpen();
-        MyApplication::delay(50);
+        MyApplication::delay(20);
     } // end while
     reconstructPath();
     printPath();

@@ -7,7 +7,7 @@
 MyApplication::MyApplication(int argc, char *argv[]):QApplication(argc,argv)
 {
     Game *game = new Game();
-    game->show(); 
+    game->show();
 }
 
 void MyApplication::delay(int msecs)
