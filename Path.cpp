@@ -51,32 +51,32 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
                 }
                 Tile *adjacent_tile = tiles.value(game.indexOfPoint(adjacentPointX,adjacentPointY));
 
-                // tentative g
-                int tentative_g;
-                if ((adjacentXOffset == adjacentYOffset) || (adjacentXOffset + adjacentYOffset == 0)){
-                    tentative_g = current->g + 14;
-                }
-                else {
-                    tentative_g = current->g + 10;
-                }
-
                 // if the adjacent tile is not walkable or is in closed map then ignore it
                 if ( (!adjacent_tile->walkable) || (closedContains(*adjacent_tile)) ) {
                     continue;
                 }
 
+                // re-calculate g of all adjacent tiles to later check if it's better or not to get there directly
+                int new_g;
+                if ((adjacentXOffset == adjacentYOffset) || (adjacentXOffset + adjacentYOffset == 0)){
+                    new_g = current->g + 14;
+                }
+                else {
+                    new_g = current->g + 10;
+                }
+
 
                 // if the adjacent tile is not in open map
-                if ((!openContains(*adjacent_tile)) || tentative_g < adjacent_tile->g){
+                if ((!openContains(*adjacent_tile)) || new_g < adjacent_tile->g){
                     adjacent_tile->parent_tile = current;
                     //drawTileParent(*adjacent_tile,*current);
 
                     // determine the G
                     if ((adjacentXOffset == adjacentYOffset) || (adjacentXOffset + adjacentYOffset == 0)){
-                        adjacent_tile->g = current->g + 14;
+                        adjacent_tile->g = new_g;
                     }
                     else {
-                        adjacent_tile->g = current->g + 10;
+                        adjacent_tile->g = new_g;
                     }
 
                     // determine the H using manhattan
@@ -101,10 +101,10 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         //qDebug() << indexdebug;
         //indexdebug++;
         //printOpen();
-        MyApplication::delay(100);
+        MyApplication::delay(20);
     } // end while
     reconstructPath();
-    //printPath();
+    printPath();
 }
 bool Path::openContains(Tile &tile)
 {
