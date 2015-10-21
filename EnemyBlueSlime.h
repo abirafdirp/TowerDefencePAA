@@ -5,12 +5,16 @@
 #include <QGraphicsPixmapItem>
 #include <QObject>
 
+class Path;
+
 class BlueSlime: public Enemy{
     Q_OBJECT
 public:
-    BlueSlime(QGraphicsItem * parent=0);
+    BlueSlime(Path &path_, QGraphicsItem * parent=0);
 public slots:
     void move();
+
+    Path &path;
 };
 
 

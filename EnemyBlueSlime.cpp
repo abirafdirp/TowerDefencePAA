@@ -1,16 +1,18 @@
 #include "EnemyBlueSlime.h"
 #include <QPixmap>
 #include <QTimer>
+#include "Path.h"
 #include "Game.h"
+#include "Tile.h"
 
-extern Game * game;
-
-BlueSlime::BlueSlime(QGraphicsItem *parent)
+BlueSlime::BlueSlime(Path &path_, QGraphicsItem *parent) : path(path_)
 {
     setPixmap(QPixmap(":/enemy/assets/enemy/slimeBlue.png"));
 }
 
 void BlueSlime::move()
 {
-    setPos(x()+64,y());
+    foreach(Tile *tile, path.path){
+        setPos(tile->x(),tile->y());
+    }
 }

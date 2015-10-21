@@ -4,6 +4,7 @@
 #include "Wall.h"
 #include "Tile.h"
 #include "Enemy.h"
+#include "Path.h"
 #include <QGraphicsView>
 
 
@@ -24,7 +25,7 @@ public:
     QMap<int,Tile*> tiles;
 
     // spawning entities
-    void spawnBlueSlime(QPoint spawn, QPoint dest);
+    void spawnBlueSlime(Tile &spawn, Tile &dest, Path &path);
 
     // getter setter
     int getTileSize();
@@ -53,6 +54,12 @@ private:
 
     //
     void printAllTiles();
+
+    // spawn dest
+    Tile *spawn1;
+    Tile *dest1;
+    Tile *spawn2;
+    Tile *dest2;
 
 };
 

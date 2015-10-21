@@ -9,6 +9,7 @@ class Tile;
 
 class Path{
 public:
+    QList<Tile*> path;
     Path(Game &game_, Tile &spawn_, Tile &dest_);
     QList<Tile*> getPath();
     Game &game;
@@ -20,8 +21,6 @@ private:
     Tile &dest;
 
     Tile *current;
-
-    QList<Tile*> path;
 
     // QMap is sorted based on its keys
     QMap<int,Tile*> open; // F as key

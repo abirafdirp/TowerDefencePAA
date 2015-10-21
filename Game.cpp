@@ -27,8 +27,6 @@ Game::Game()
     //drawTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
     //drawTilesPoint();
     //printAllTiles();
-    QPoint spawn11 = QPoint(1,5);
-    QPoint dest11 = QPoint(1,5);
 
     QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(1)+4,y_scene(5)+4,map_tile_size-4,map_tile_size-4);
     rect->setBrush(QBrush(Qt::gray));
@@ -46,8 +44,8 @@ Game::Game()
 void Game::generatePath() {
     Tile *spawn1 = tiles.value(indexOfPoint(1,5));
     Tile *dest1 = tiles.value(indexOfPoint(19,5));
-
     Path *path = new Path(*this,*spawn1,*dest1);
+    spawnBlueSlime(*spawn1,*dest1, *path);
 }
 
 void Game::createMapTiles(QString filename)
@@ -107,11 +105,11 @@ void Game::setMapTile(int map_tiles_x, int map_tiles_y, int map_tile_size_)
     map_tile_size = map_tile_size_;
 }
 
-void Game::spawnBlueSlime(QPoint spawn, QPoint dest)
+void Game::spawnBlueSlime(Tile &spawn, Tile &dest, Path &path)
 {
-    BlueSlime * blueslime = new BlueSlime();
+    BlueSlime * blueslime = new BlueSlime(path);
     scene->addItem(blueslime);
-    blueslime->setPos(x_scene(spawn.x()),y_scene(spawn.y()));
+    blueslime->setPos(x_scene(spawn.point.x()),y_scene(spawn.point.y()));
     QTimer *fps = new QTimer(this);
     connect(fps,SIGNAL(timeout()),blueslime,SLOT(move()));
     fps->start(1000);

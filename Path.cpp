@@ -36,7 +36,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         open.take(open.firstKey());
         closed.insertMulti(game.indexOfPoint(current->point.x(),current->point.y()),current);
         //drawClosedRect(current_x_point,current_y_point);
-        drawTileDebug(*current);
+        //drawTileDebug(*current);
 
         // generate adjacent tiles and process it
         for(int adjacentXOffset=-1;adjacentXOffset <=1;adjacentXOffset++){
@@ -92,7 +92,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
 
                     // DEBUG
                     //drawOpenRect(adjacentPointX,adjacentPointY);
-                    drawTileDebug(*adjacent_tile);
+                    //drawTileDebug(*adjacent_tile);
                 }
 
             } //endfor
@@ -104,7 +104,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         MyApplication::delay(100);
     } // end while
     reconstructPath();
-    //printPath();
+    printPath();
 }
 bool Path::openContains(Tile &tile)
 {
@@ -240,7 +240,6 @@ void Path::printPath()
     foreach (Tile *tile, path) {
         int x = tile->point.x();
         int y = tile->point.y();
-        qDebug() << x << "," << y;
         QGraphicsRectItem *rect = new QGraphicsRectItem(game.x_scene(x)+20,game.y_scene(y)+20,game.map_tile_size-20,game.map_tile_size-20);
         rect->setBrush(QBrush(Qt::green));
         rect->setZValue(10000);
