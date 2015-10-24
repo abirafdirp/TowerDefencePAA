@@ -71,13 +71,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
                     adjacent_tile->parent_tile = current;
                     //drawTileParent(*adjacent_tile,*current);
 
-                    // determine the G
-                    if ((adjacentXOffset == adjacentYOffset) || (adjacentXOffset + adjacentYOffset == 0)){
-                        adjacent_tile->g = new_g;
-                    }
-                    else {
-                        adjacent_tile->g = new_g;
-                    }
+                    adjacent_tile->g = new_g;
 
                     // determine the H using manhattan
                     int manhattan = 10 * (abs(dest.point.x() - adjacent_tile->point.x()) + abs(dest.point.y() - adjacent_tile->point.y()));
