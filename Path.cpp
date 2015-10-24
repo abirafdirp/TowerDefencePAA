@@ -98,7 +98,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         MyApplication::delay(20);
     } // end while
     reconstructPath();
-    printPath();
+    //printPath();
 }
 bool Path::openContains(Tile &tile)
 {

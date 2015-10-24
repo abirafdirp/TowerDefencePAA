@@ -8,11 +8,18 @@
 BlueSlime::BlueSlime(Path &path_, QGraphicsItem *parent) : path(path_)
 {
     setPixmap(QPixmap(":/enemy/assets/enemy/slimeBlue.png"));
+    lenindex = path.path.length() - 1;
 }
 
 void BlueSlime::move()
 {
-    foreach(Tile *tile, path.path){
-        setPos(tile->x(),tile->y());
+    if (lenindex >= 0){
+        setPos(path.path.at(lenindex)->x(),path.path.at(lenindex)->y());
+        lenindex--;
     }
+    if (lenindex == -1) {
+
+        delete this;
+    }
+
 }

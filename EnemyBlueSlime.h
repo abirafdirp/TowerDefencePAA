@@ -12,6 +12,8 @@ class BlueSlime: public Enemy{
 public:
     BlueSlime(Path &path_, QGraphicsItem * parent=0);
     Path &path;
+private:
+    int lenindex;
 public slots:
     void move();
 };

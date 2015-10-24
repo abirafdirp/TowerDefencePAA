@@ -36,7 +36,7 @@ Game::Game()
     QGraphicsRectItem *rect2 = new QGraphicsRectItem(x_scene(19)+4,y_scene(5)+4,map_tile_size-4,map_tile_size-4);
     rect2->setBrush(QBrush(Qt::gray));
     rect2->setZValue(100000);
-    scene->addItem(rect2);
+    //scene->addItem(rect2);
 
     BuildWall *wall = new BuildWall(*this);
 }
