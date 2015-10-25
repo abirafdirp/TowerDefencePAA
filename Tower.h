@@ -2,13 +2,16 @@
 #define TOWER
 
 #include <QGraphicsPixmapItem>
+#include <QObject>
+#include <QMouseEvent>
 
-class Tower: public QGraphicsPixmapItem {
-   public:
-    Tower(QGraphicsItem * parent=0);
-   private:
-    QGraphicsPolygonItem * attack_area;
+class Game;
 
+class Tower: public QObject, public QGraphicsPixmapItem {
+public:
+    Tower(Game &game_, int x, int y, QGraphicsItem * parent=0);
+private:
+    Game &game;
 };
 
 #endif // TOWER

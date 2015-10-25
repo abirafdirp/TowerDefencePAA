@@ -12,4 +12,8 @@
     <qresource prefix="/enemy">
         <file>assets/enemy/slimeBlue.png</file>
     </qresource>
+    <qresource prefix="/tank">
+        <file>assets/tank/barrelBeige_outline.png</file>
+        <file>assets/tank/tankBeige_outline.png</file>
+    </qresource>
 </RCC>

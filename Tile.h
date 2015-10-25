@@ -6,8 +6,7 @@
 
 class Game;
 
-class Tile: public QObject, public QGraphicsPixmapItem {
-    Q_OBJECT
+class Tile: public QGraphicsPixmapItem {
 public:
     Tile(Game &game_, QPoint point, QGraphicsItem * parent=0);
     int processF();

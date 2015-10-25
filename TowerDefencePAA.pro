@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     MyApplication.cpp \
     Enemy.cpp \
     Path.cpp \
-    BuildWall.cpp
+    BuildWall.cpp \
+    bullet.cpp
 
 HEADERS  += \
     Wall.h \
@@ -32,7 +33,8 @@ HEADERS  += \
     MyApplication.h \
     Enemy.h \
     Path.h \
-    BuildWall.h
+    BuildWall.h \
+    bullet.h
 
 FORMS    +=
 

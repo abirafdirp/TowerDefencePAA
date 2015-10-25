@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "Path.h"
 #include <QGraphicsView>
+#include "Tower.h"
 
 
 class Game: public QGraphicsView{
@@ -21,7 +22,7 @@ public:
     int map_height_in_tiles;
     int map_tile_size; // in pixels
 
-    // tiles are indexed in int for easy sorting in QMap. We must use tileCoordinate(x.y) to get an index of a tile
+    // tiles are indexed in int for easy sorting in QMap. We must use indexOfPoint(x,y) to get an index of a tile
     QMap<int,Tile*> tiles;
 
     // spawning entities
@@ -42,6 +43,7 @@ public:
     int y_scene(int y);
 
 private:
+    Tower *tower;
 
     // game initializations
     void createMapTiles(QString filename);
@@ -54,6 +56,9 @@ private:
 
     //
     void printAllTiles();
+
+    // mouse input
+    void mouseMoveEvent(QMouseEvent *event);
 
     // spawn dest
     Tile *spawn1;

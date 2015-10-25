@@ -52,6 +52,7 @@ void BuildWall::keyPressEvent(QKeyEvent *ev)
         case Qt::Key_Return:
             this->setFlag(QGraphicsItem::ItemIsFocusable, false);
             this->setFocus();
+            delete this;
             game.generatePath();
             break;
     }

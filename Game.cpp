@@ -18,9 +18,12 @@
 #include <QMapIterator>
 #include <QGraphicsRectItem>
 #include <QBrush>
+#include <QLineF>
+#include <QPointF>
 
 Game::Game()
 {
+    setMouseTracking(true);
     setMapTile(20,10,64); // but start from 0
     createScene();
     createMapTiles(":/floor/assets/floor/dirt.png");
@@ -36,7 +39,10 @@ Game::Game()
     QGraphicsRectItem *rect2 = new QGraphicsRectItem(x_scene(19)+4,y_scene(5)+4,map_tile_size-4,map_tile_size-4);
     rect2->setBrush(QBrush(Qt::gray));
     rect2->setZValue(100000);
-    //scene->addItem(rect2);
+    scene->addItem(rect2);
+
+    int index = indexOfPoint(19,4);
+    Tower *tower = new Tower(*this,this->tiles.value(index)->x(),this->tiles.value(index)->y());
 
     BuildWall *wall = new BuildWall(*this);
 }
@@ -181,4 +187,14 @@ void Game::printAllTiles()
     while (tile.hasNext()){
         tile.next();
     }
+}
+
+void Game::mouseMoveEvent(QMouseEvent *event)
+{
+    if (event->buttons() == Qt::LeftButton){
+       qDebug() << "yes";
+    }
+    QLineF ln(QPointF(0,0),QPointF(100,100));
+    int angle = -1 * ln.angle();
+    this->tower->setRotation(angle);
 }
