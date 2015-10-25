@@ -4,7 +4,7 @@
 #include <QGraphicsPixmapItem>
 
 class Wall: public QGraphicsPixmapItem {
-   public:
+public:
     Wall(QGraphicsItem * parent=0);
 
 };

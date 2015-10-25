@@ -8,9 +8,9 @@
 #include <QGraphicsView>
 #include "Tower.h"
 
+class BuildWall;
 
 class Game: public QGraphicsView{
-    Q_OBJECT
 public:
     Game();
 
@@ -42,8 +42,10 @@ public:
     int x_scene(int x);
     int y_scene(int y);
 
-private:
     Tower *tower;
+    bool towerbuilt = false;
+
+private:
 
     // game initializations
     void createMapTiles(QString filename);
@@ -59,12 +61,15 @@ private:
 
     // mouse input
     void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
 
     // spawn dest
     Tile *spawn1;
     Tile *dest1;
     Tile *spawn2;
     Tile *dest2;
+
+    BuildWall *buildwall;
 
 };
 

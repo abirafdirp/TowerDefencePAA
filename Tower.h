@@ -8,6 +8,7 @@
 class Game;
 
 class Tower: public QObject, public QGraphicsPixmapItem {
+    Q_OBJECT
 public:
     Tower(Game &game_, int x, int y, QGraphicsItem * parent=0);
 private:

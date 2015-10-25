@@ -18,7 +18,6 @@ public:
     int g;
     int f;
     Tile *parent_tile;
-
 private:
     Game& game;
 

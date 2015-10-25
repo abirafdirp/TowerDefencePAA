@@ -1,12 +1,12 @@
 #include "Game.h"
 #include "Tower.h"
+#include "MyApplication.h"
 #include "EnemyBlueSlime.h"
 #include "Wall.h"
 #include "BuildWall.h"
 #include "Tile.h"
 #include "Path.h"
 #include <QGraphicsScene>
-#include <QDebug>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsTextItem>
 #include <QPixmap>
@@ -20,6 +20,7 @@
 #include <QBrush>
 #include <QLineF>
 #include <QPointF>
+#include <qmath.h>
 
 Game::Game()
 {
@@ -42,12 +43,13 @@ Game::Game()
     scene->addItem(rect2);
 
     int index = indexOfPoint(19,4);
-    Tower *tower = new Tower(*this,this->tiles.value(index)->x(),this->tiles.value(index)->y());
+    tower = new Tower(*this,this->tiles.value(index)->x(),this->tiles.value(index)->y());
 
-    BuildWall *wall = new BuildWall(*this);
+    buildwall = new BuildWall(*this);
 }
 
 void Game::generatePath() {
+    delete buildwall;
     Tile *spawn1 = tiles.value(indexOfPoint(1,5));
     Tile *dest1 = tiles.value(indexOfPoint(19,5));
     Path *path = new Path(*this,*spawn1,*dest1);
@@ -191,10 +193,16 @@ void Game::printAllTiles()
 
 void Game::mouseMoveEvent(QMouseEvent *event)
 {
+    QLineF ln(QPointF(tower->x() + 5,tower->y() + 42),QPointF(event->pos()));
+    double angle =  ((-1 * ln.angle()) + 90);
+    qDebug() << angle;
+    tower->setRotation(angle);
+}
+
+void Game::mousePressEvent(QMouseEvent *event)
+{
     if (event->buttons() == Qt::LeftButton){
        qDebug() << "yes";
     }
-    QLineF ln(QPointF(0,0),QPointF(100,100));
-    int angle = -1 * ln.angle();
-    this->tower->setRotation(angle);
 }
+
