@@ -36,3 +36,8 @@ void BlueSlime::move()
     }
 
 }
+
+void BlueSlime::spawner()
+{
+    BlueSlime *slime = new BlueSlime(this->game,this->path);
+}
