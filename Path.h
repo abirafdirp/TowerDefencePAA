@@ -14,6 +14,8 @@ public:
     QList<Tile*> getPath();
     Game &game;
 
+    bool destfound = false;
+
 private:
     // we want to redraw everything after a tile gets updated,
     int update_z_index = 150;

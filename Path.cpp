@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QMapIterator>
 #include <QListIterator>
+#include <QList>
+#include <QMessageBox>
 
 Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_), dest(dest_)
 {
@@ -29,6 +31,7 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
 
         // break out of loop if current is dest
         if ((current_x_point == dest_x_point) && (current_y_point == dest_y_point)) {
+            destfound = true;
             break;
         }
 
@@ -95,9 +98,17 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         //qDebug() << indexdebug;
         //indexdebug++;
         //printOpen();
-        MyApplication::delay(20);
+        //MyApplication::delay(20);
     } // end while
-    reconstructPath();
+    if (destfound){
+       reconstructPath();
+    }
+    else {
+        QMessageBox msgBox;
+        msgBox.setText("Tidak ditemukan jalan. Harap tata ulang penghalang!");
+        msgBox.exec();
+        game.restartScene();
+    }
     //printPath();
 }
 bool Path::openContains(Tile &tile)

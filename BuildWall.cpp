@@ -4,6 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QKeyEvent>
+#include <QDebug>
 #include "Path.h"
 
 
@@ -42,16 +43,24 @@ void BuildWall::keyPressEvent(QKeyEvent *ev)
             }
             break;
         case Qt::Key_Space:{
-            int buildwall_x = x() / game.map_tile_size;
-            int buildwall_y = y() / game.map_tile_size;
-            Tile *tile = game.tiles.value(game.indexOfPoint(buildwall_x,buildwall_y));
-            tile->walkable = false;
-            tile->setPixmap(QPixmap(":/wall/assets/wall/brick_red.png"));
+            qDebug() << x() << game.spawn1->x() << y() << game.spawn1->y();
+
+            if (((x() == game.spawn1->x()) && (y() == game.spawn1->y())) || ((y() == game.dest1->y()) && (x() == game.dest1->x()))){
+            }
+            else if((x() == game.dest1->x()) && (y() == game.dest1->y() - 64)){
+
+            }
+            else {
+                int buildwall_x = x() / game.map_tile_size;
+                int buildwall_y = y() / game.map_tile_size;
+                Tile *tile = game.tiles.value(game.indexOfPoint(buildwall_x,buildwall_y));
+                tile->walkable = false;
+                tile->setPixmap(QPixmap(":/wall/assets/wall/brick_red.png"));
+            }
             break;
+
         }
         case Qt::Key_Return:
-            this->setFlag(QGraphicsItem::ItemIsFocusable, false);
-            this->setFocus();
             game.generatePath();
             break;
     }

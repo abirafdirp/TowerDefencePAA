@@ -10,9 +10,13 @@
     </qresource>
     <qresource prefix="/floor">
         <file>assets/floor/dirt.png</file>
+        <file>assets/floor/finish.png</file>
+        <file>assets/floor/start.png</file>
     </qresource>
     <qresource prefix="/enemy">
         <file>assets/enemy/slimeBlue.png</file>
+        <file>assets/enemy/alienBeige_walk1.png</file>
+        <file>assets/enemy/alienBeige_walk2.png</file>
     </qresource>
     <qresource prefix="/tank">
         <file>assets/tank/barrelBeige_outline.png</file>

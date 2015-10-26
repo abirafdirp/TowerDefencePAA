@@ -6,12 +6,15 @@
 #include <QObject>
 
 class Path;
+class Game;
 
 class BlueSlime: public Enemy{
     Q_OBJECT
 public:
-    BlueSlime(Path &path_, QGraphicsItem * parent=0);
+    BlueSlime(Game &game_, Path &path_, QGraphicsItem * parent=0);
 private:
+    Game &game;
+    int animation_index = 0;
     Path &path;
     int lenindex;
 public slots:

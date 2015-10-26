@@ -23,6 +23,7 @@
 #include <QPointF>
 #include <qmath.h>
 #include <QCursor>
+#include <QMessageBox>
 
 Game::Game()
 {
@@ -42,33 +43,45 @@ Game::Game()
     //drawTilesPoint();
     //printAllTiles();
 
-    QGraphicsRectItem *rect = new QGraphicsRectItem(x_scene(1)+4,y_scene(5)+4,map_tile_size-4,map_tile_size-4);
-    rect->setBrush(QBrush(Qt::gray));
-    rect->setZValue(100000);
-    scene->addItem(rect);
+    spawn1 = tiles.value(indexOfPoint(0,5));
+    spawn1->setPos(x_scene(0),y_scene(5));
+    dest1 = tiles.value(indexOfPoint(19,5));
+    dest1->setPos(x_scene(19),y_scene(5));
 
-    QGraphicsRectItem *rect2 = new QGraphicsRectItem(x_scene(19)+4,y_scene(5)+4,map_tile_size-4,map_tile_size-4);
-    rect2->setBrush(QBrush(Qt::gray));
-    rect2->setZValue(100000);
-    scene->addItem(rect2);
+    QGraphicsPixmapItem *start = new QGraphicsPixmapItem(QPixmap(":/floor/assets/floor/start.png"));
+    start->setPos(x_scene(0),y_scene(5));
+    start->setScale(0.5);
+    scene->addItem(start);
+
+    QGraphicsPixmapItem *finish = new QGraphicsPixmapItem(QPixmap(":/floor/assets/floor/finish.png"));
+    finish->setPos(x_scene(19),y_scene(5));
+    finish->setScale(0.5);
+    scene->addItem(finish);
 
     int index = indexOfPoint(19,4);
     tower = new Tower(*this,this->tiles.value(index)->x(),this->tiles.value(index)->y());
+    tiles.value(indexOfPoint(19,4))->walkable = false;
     base_reload_bar = new QGraphicsRectItem(0,0,map_tile_size-13,10);
     base_reload_bar->setBrush(QBrush(Qt::red));
     base_reload_bar->setZValue(1);
     base_reload_bar->setPos(x_scene(19)+4,y_scene(4)-15);
     scene->addItem(base_reload_bar);
 
+    reload_bar_placeholder = new QGraphicsRectItem(x_scene(19)+4,y_scene(4)-15,51,10);
+    reload_bar_placeholder->setBrush(QBrush(Qt::green));
+    reload_bar_placeholder->setZValue(999);
+    scene->addItem(reload_bar_placeholder);
+
     buildwall = new BuildWall(*this);
 }
 
 void Game::generatePath() {
-    delete buildwall;
-    Tile *spawn1 = tiles.value(indexOfPoint(1,5));
-    Tile *dest1 = tiles.value(indexOfPoint(19,5));
     Path *path = new Path(*this,*spawn1,*dest1);
-    spawnBlueSlime(*spawn1,*dest1, *path);
+
+    if (path->destfound){
+        delete buildwall;
+        spawnBlueSlime(*spawn1,*dest1, *path);
+    }
 }
 
 void Game::createMapTiles(QString filename)
@@ -130,7 +143,7 @@ void Game::setMapTile(int map_tiles_x, int map_tiles_y, int map_tile_size_)
 
 void Game::spawnBlueSlime(Tile &spawn, Tile &dest, Path &path)
 {
-    BlueSlime * blueslime = new BlueSlime(path);
+    BlueSlime * blueslime = new BlueSlime(*this, path);
     scene->addItem(blueslime);
     blueslime->setPos(x_scene(spawn.point.x()),y_scene(spawn.point.y()));
     QTimer *fps = new QTimer(this);
@@ -156,6 +169,13 @@ int Game::x_scene(int x)
 int Game::y_scene(int y)
 {
     return y * this->map_tile_size;
+}
+
+void Game::restartScene()
+{
+    Game *game = new Game();
+    game->show();
+    delete this;
 }
 
 int Game::indexOfPoint(int x, int y)
@@ -224,6 +244,11 @@ void Game::mousePressEvent(QMouseEvent *event)
        if (can_fire == true){
            can_fire = false;
 
+           if (reload_bar_placeholder != nullptr){
+               scene->removeItem(reload_bar_placeholder);
+               reload_bar_placeholder = nullptr;
+           }
+
            if (redraw_reload_bar == true){
                delete reload_bar;
                redraw_reload_bar = false;
@@ -241,8 +266,8 @@ void Game::mousePressEvent(QMouseEvent *event)
            bullet->setTarget(event->pos());
            scene->addItem(bullet);
 
-           reload_bar = new QGraphicsRectItem(x_scene(19)+4,y_scene(4)-15,1,10);
-           reload_bar->setBrush(QBrush(Qt::blue));
+           reload_bar = new QGraphicsRectItem(x_scene(19)+4,y_scene(4)-15,51,10);
+           reload_bar->setBrush(QBrush(Qt::green));
            reload_bar->setZValue(999);
            scene->addItem(reload_bar);
 

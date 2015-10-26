@@ -47,6 +47,14 @@ public:
     Tower *tower;
     bool towerbuilt = false;
 
+    // spawn dest
+    Tile *spawn1;
+    Tile *dest1;
+    Tile *spawn2;
+    Tile *dest2;
+
+    void restartScene();
+
 private:
 
     // game initializations
@@ -65,12 +73,6 @@ private:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
 
-    // spawn dest
-    Tile *spawn1;
-    Tile *dest1;
-    Tile *spawn2;
-    Tile *dest2;
-
     BuildWall *buildwall;
 
     QGraphicsPixmapItem *smoke = nullptr;
@@ -78,6 +80,7 @@ private:
     QTimer *reload_timer;
     QTimer *reload_bar_timer;
     QGraphicsRectItem *reload_bar;
+    QGraphicsRectItem *reload_bar_placeholder;
     QGraphicsRectItem *base_reload_bar;
     int reload_bar_threshold = 0;
 

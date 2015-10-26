@@ -7,6 +7,7 @@
 #include <QPointF>
 #include <QTimer>
 #include <QDebug>
+#include <QRectF>
 #include <qmath.h> // qSin, qCos, qTan
 
 
@@ -53,6 +54,13 @@ void Bullet::targetCheck()
         explosion->setPos(target);
         explosion->setOffset(-40,-45);
         game.scene->addItem(explosion);
+
+        QList<QGraphicsItem*> attacked = game.scene->items(QRectF(explosion->pos().x() - 40, explosion->pos().y() -45,80,80));
+        foreach (QGraphicsItem *object, attacked){
+            if (object->zValue() == 1){
+                delete object;
+            }
+        }
 
         game.scene->removeItem(this);
     }
