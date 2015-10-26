@@ -7,10 +7,12 @@
 #include "Path.h"
 #include <QGraphicsView>
 #include "Tower.h"
+#include <QObject>
 
 class BuildWall;
 
 class Game: public QGraphicsView{
+    Q_OBJECT
 public:
     Game();
 
@@ -70,6 +72,22 @@ private:
     Tile *dest2;
 
     BuildWall *buildwall;
+
+    QGraphicsPixmapItem *smoke = nullptr;
+    QTimer *smoke_timer;
+    QTimer *reload_timer;
+    QTimer *reload_bar_timer;
+    QGraphicsRectItem *reload_bar;
+    int reload_bar_threshold = 0;
+
+    QPixmap *cursor = nullptr;
+
+    bool can_fire = true;
+
+private slots:
+    void animateSmoke();
+    void reloadTimer();
+    void reloadBarTimer();
 
 };
 

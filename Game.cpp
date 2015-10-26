@@ -6,6 +6,7 @@
 #include "BuildWall.h"
 #include "Tile.h"
 #include "Path.h"
+#include "bullet.h"
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsTextItem>
@@ -21,12 +22,21 @@
 #include <QLineF>
 #include <QPointF>
 #include <qmath.h>
+#include <QCursor>
 
 Game::Game()
 {
     setMouseTracking(true);
     setMapTile(20,10,64); // but start from 0
     createScene();
+
+    cursor = new QPixmap(":/util/assets/tank/crosshair_blue_large.png");
+    //cursor->setOffset(-25,-25);
+    //cursor->setZValue(999);
+    //QApplication::setOverrideCursor(Qt::BlankCursor);
+
+    QCursor(cursor);
+
     createMapTiles(":/floor/assets/floor/dirt.png");
     //drawTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
     //drawTilesPoint();
@@ -44,6 +54,10 @@ Game::Game()
 
     int index = indexOfPoint(19,4);
     tower = new Tower(*this,this->tiles.value(index)->x(),this->tiles.value(index)->y());
+    QGraphicsRectItem *base_reload_bar = new QGraphicsRectItem(x_scene(19)+4,y_scene(4)-15,map_tile_size-4,10);
+    base_reload_bar->setBrush(QBrush(Qt::red));
+    base_reload_bar->setZValue(1);
+    scene->addItem(base_reload_bar);
 
     buildwall = new BuildWall(*this);
 }
@@ -193,16 +207,91 @@ void Game::printAllTiles()
 
 void Game::mouseMoveEvent(QMouseEvent *event)
 {
-    QLineF ln(QPointF(tower->x() + 5,tower->y() + 42),QPointF(event->pos()));
+    if (cursor !=nullptr){
+        //cursor->setPos(event->pos());
+    }
+
+    QLineF ln(QPointF(tower->x() + 5,tower->y() + 40),QPointF(event->pos()));
     double angle =  ((-1 * ln.angle()) + 90);
-    qDebug() << angle;
     tower->setRotation(angle);
 }
 
 void Game::mousePressEvent(QMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton){
-       qDebug() << "yes";
+
+       if (can_fire == true){
+           can_fire = false;
+
+           // bullet
+           Bullet *bullet = new Bullet();
+           QLineF ln(QPointF(tower->x() + 5,tower->y() + 40),QPointF(event->pos()));
+           bullet->setOffset(35,-10);
+           bullet->setPos(ln.x1(), ln.y1());
+           double angle =  ((-1 * ln.angle()));
+           bullet->setRotation(angle);
+           scene->addItem(bullet);
+
+           reload_bar = new QGraphicsRectItem(x_scene(19)+4,y_scene(4)-15,map_tile_size-4,10);
+           reload_bar->setBrush(QBrush(Qt::blue));
+           scene->addItem(reload_bar);
+
+           smoke_timer = new QTimer();
+           reload_timer = new QTimer();
+           reload_bar_timer = new QTimer();
+           connect(smoke_timer,SIGNAL(timeout()),this,SLOT(animateSmoke()));
+           connect(reload_timer,SIGNAL(timeout()),this,SLOT(reloadTimer()));
+           connect(reload_bar_timer,SIGNAL(timeout()),this,SLOT(reloadBarTimer()));
+           smoke_timer->start(50);
+           reload_timer->start(3000);
+           reload_bar_timer->start(50);
+
+           // smoke on barrel
+           smoke = new QGraphicsPixmapItem(QPixmap(":/tank/assets/tank/smokeGrey4.png"));
+           smoke->setOffset(-25,-50);
+           smoke->setPos(ln.x1(), ln.y1());
+           smoke->setRotation(angle);
+           smoke->setZValue(199);
+           scene->addItem(smoke);
+       }
+
+
+    }
+}
+
+
+
+void Game::animateSmoke()
+{
+    if (smoke->opacity() > 0) {
+        smoke->setOpacity(smoke->opacity() - 0.05);
+    }
+    else {
+        disconnect(smoke_timer,SIGNAL(timeout()),this,SLOT(animateSmoke()));
+        smoke = nullptr;
+    }
+}
+
+void Game::reloadTimer()
+{
+    if (reload_timer->remainingTime() > 0) {
+
+    }
+    can_fire = true;
+    disconnect(reload_timer,SIGNAL(timeout()),this,SLOT(reloadTimer()));
+
+}
+
+void Game::reloadBarTimer()
+{
+    if (reload_bar_threshold < 3000) {
+        reload_bar_threshold += 50;
+        reload_bar->setRect(reload_bar->x(),reload_bar->y(),reload_bar->boundingRect().x() + 5,reload_bar->boundingRect().y());
+    }
+    else {
+        reload_bar_threshold = 0;
+        disconnect(reload_bar_timer,SIGNAL(timeout()),this,SLOT(reloadBarTimer()));
+        delete reload_bar;
     }
 }
 

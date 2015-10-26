@@ -5,6 +5,7 @@
     <qresource prefix="/util">
         <file>assets/util/sTrackBorder_0.png</file>
         <file>assets/util/arrowUp.png</file>
+        <file>assets/tank/crosshair_blue_large.png</file>
     </qresource>
     <qresource prefix="/floor">
         <file>assets/floor/dirt.png</file>
@@ -15,5 +16,7 @@
     <qresource prefix="/tank">
         <file>assets/tank/barrelBeige_outline.png</file>
         <file>assets/tank/tankBeige_outline.png</file>
+        <file>assets/tank/bulletBlueSilver_outline.png</file>
+        <file>assets/tank/smokeGrey4.png</file>
     </qresource>
 </RCC>
