@@ -6,6 +6,7 @@
         <file>assets/util/sTrackBorder_0.png</file>
         <file>assets/util/arrowUp.png</file>
         <file>assets/tank/crosshair_blue_large.png</file>
+        <file>assets/util/regularExplosion02.png</file>
     </qresource>
     <qresource prefix="/floor">
         <file>assets/floor/dirt.png</file>

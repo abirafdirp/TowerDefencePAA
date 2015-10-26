@@ -38,10 +38,10 @@ public:
     void generatePath();
 
     // tile indexing
-    int indexOfPoint(int x, int y);
+    int indexOfPoint(int reload_bar_length, int y);
 
     // convert tile coordinate to scene coordinate
-    int x_scene(int x);
+    int x_scene(int reload_bar_length);
     int y_scene(int y);
 
     Tower *tower;
@@ -78,7 +78,11 @@ private:
     QTimer *reload_timer;
     QTimer *reload_bar_timer;
     QGraphicsRectItem *reload_bar;
+    QGraphicsRectItem *base_reload_bar;
     int reload_bar_threshold = 0;
+
+    int reload_bar_length = 2;
+    bool redraw_reload_bar = false;
 
     QPixmap *cursor = nullptr;
 

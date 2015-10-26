@@ -12,7 +12,7 @@ Tower::Tower(Game &game_, int x, int y, QGraphicsItem *parent) : game(game_)
     tank->setPos(x,y);
     tank->setTransformOriginPoint(tank->boundingRect().width() / 2, tank->boundingRect().height() / 2);
     tank->setRotation(270);
-    this->setZValue(100);
+    this->setZValue(1000);
     this->setTransformOriginPoint(9, 42);
     this->setPos(tank->x() + 23, tank->y() - 12);
     game.scene->addItem(this);

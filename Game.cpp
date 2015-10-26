@@ -54,9 +54,10 @@ Game::Game()
 
     int index = indexOfPoint(19,4);
     tower = new Tower(*this,this->tiles.value(index)->x(),this->tiles.value(index)->y());
-    QGraphicsRectItem *base_reload_bar = new QGraphicsRectItem(x_scene(19)+4,y_scene(4)-15,map_tile_size-4,10);
+    base_reload_bar = new QGraphicsRectItem(0,0,map_tile_size-13,10);
     base_reload_bar->setBrush(QBrush(Qt::red));
     base_reload_bar->setZValue(1);
+    base_reload_bar->setPos(x_scene(19)+4,y_scene(4)-15);
     scene->addItem(base_reload_bar);
 
     buildwall = new BuildWall(*this);
@@ -223,17 +224,26 @@ void Game::mousePressEvent(QMouseEvent *event)
        if (can_fire == true){
            can_fire = false;
 
+           if (redraw_reload_bar == true){
+               delete reload_bar;
+               redraw_reload_bar = false;
+           }
+
            // bullet
-           Bullet *bullet = new Bullet();
+           Bullet *bullet = new Bullet(*this);
            QLineF ln(QPointF(tower->x() + 5,tower->y() + 40),QPointF(event->pos()));
            bullet->setOffset(35,-10);
            bullet->setPos(ln.x1(), ln.y1());
            double angle =  ((-1 * ln.angle()));
+//           QPointF *target = new QPointF(100,100);
+//           bullet->setTarget(target);
            bullet->setRotation(angle);
+           bullet->setTarget(event->pos());
            scene->addItem(bullet);
 
-           reload_bar = new QGraphicsRectItem(x_scene(19)+4,y_scene(4)-15,map_tile_size-4,10);
+           reload_bar = new QGraphicsRectItem(x_scene(19)+4,y_scene(4)-15,1,10);
            reload_bar->setBrush(QBrush(Qt::blue));
+           reload_bar->setZValue(999);
            scene->addItem(reload_bar);
 
            smoke_timer = new QTimer();
@@ -244,7 +254,7 @@ void Game::mousePressEvent(QMouseEvent *event)
            connect(reload_bar_timer,SIGNAL(timeout()),this,SLOT(reloadBarTimer()));
            smoke_timer->start(50);
            reload_timer->start(3000);
-           reload_bar_timer->start(50);
+           reload_bar_timer->start(100);
 
            // smoke on barrel
            smoke = new QGraphicsPixmapItem(QPixmap(":/tank/assets/tank/smokeGrey4.png"));
@@ -268,30 +278,28 @@ void Game::animateSmoke()
     }
     else {
         disconnect(smoke_timer,SIGNAL(timeout()),this,SLOT(animateSmoke()));
-        smoke = nullptr;
+        delete smoke;
     }
 }
 
 void Game::reloadTimer()
 {
-    if (reload_timer->remainingTime() > 0) {
-
-    }
     can_fire = true;
     disconnect(reload_timer,SIGNAL(timeout()),this,SLOT(reloadTimer()));
-
 }
 
 void Game::reloadBarTimer()
 {
-    if (reload_bar_threshold < 3000) {
-        reload_bar_threshold += 50;
-        reload_bar->setRect(reload_bar->x(),reload_bar->y(),reload_bar->boundingRect().x() + 5,reload_bar->boundingRect().y());
+    if (reload_bar_threshold <= 2600) {
+        reload_bar_threshold += 100;
+        reload_bar->setRect(base_reload_bar->pos().x(),base_reload_bar->pos().y(),reload_bar_length,10);
+        reload_bar_length+=2;
     }
     else {
         reload_bar_threshold = 0;
         disconnect(reload_bar_timer,SIGNAL(timeout()),this,SLOT(reloadBarTimer()));
-        delete reload_bar;
+        redraw_reload_bar = true;
+        reload_bar_length = 0;
     }
 }
 
