@@ -24,4 +24,10 @@
         <file>assets/tank/bulletBlueSilver_outline.png</file>
         <file>assets/tank/smokeGrey4.png</file>
     </qresource>
+    <qresource prefix="/menu">
+        <file>assets/menu/caramain.png</file>
+        <file>assets/menu/menu.png</file>
+        <file>assets/menu/score copy.png</file>
+        <file>assets/menu/warning copy.png</file>
+    </qresource>
 </RCC>

@@ -48,6 +48,12 @@ Game::Game()
     dest1 = tiles.value(indexOfPoint(19,5));
     dest1->setPos(x_scene(19),y_scene(5));
 
+    QGraphicsPixmapItem *keybind = new QGraphicsPixmapItem(QPixmap(":/menu/assets/menu/menu.png"));
+    scene->addItem(keybind);
+    keybind->setScale(0.6);
+    keybind->setOffset(400,430);
+    keybind->setZValue(99999);
+
     QGraphicsPixmapItem *start = new QGraphicsPixmapItem(QPixmap(":/floor/assets/floor/start.png"));
     start->setPos(x_scene(0),y_scene(5));
     start->setScale(0.5);
@@ -73,14 +79,22 @@ Game::Game()
     scene->addItem(reload_bar_placeholder);
 
     buildwall = new BuildWall(*this);
+
+    score_text = new QGraphicsTextItem(QString("Skor : %1").arg(score));
+    score_text->setPos(1190,10);
+    score_text->setScale(1.5);
+    scene->addItem(score_text);
 }
 
 void Game::generatePath() {
-    Path *path = new Path(*this,*spawn1,*dest1);
+    path = new Path(*this,*spawn1,*dest1);
 
     if (path->destfound){
-        delete buildwall;
-        spawnBlueSlime(*spawn1,*dest1, *path);
+        buildwall->setZValue(-9999);
+        spawner_timer = new QTimer();
+        connect(spawner_timer,SIGNAL(timeout()),this,SLOT(spawnBlueSlime()));
+        spawner_timer->start(5000);
+        spawnBlueSlime();
     }
 }
 
@@ -141,14 +155,15 @@ void Game::setMapTile(int map_tiles_x, int map_tiles_y, int map_tile_size_)
     map_tile_size = map_tile_size_;
 }
 
-void Game::spawnBlueSlime(Tile &spawn, Tile &dest, Path &path)
+void Game::spawnBlueSlime()
 {
-    BlueSlime * blueslime = new BlueSlime(*this, path);
-    scene->addItem(blueslime);
-    blueslime->setPos(x_scene(spawn.point.x()),y_scene(spawn.point.y()));
-    QTimer *fps = new QTimer(this);
-    connect(fps,SIGNAL(timeout()),blueslime,SLOT(move()));
-    fps->start(1000);
+    increase_spawner++;
+    BlueSlime * blueslime = new BlueSlime(*this, *path);
+    if (increase_spawner % 4== 0){
+        if (spawner_timer->interval() > 2000){
+            spawner_timer->setInterval(spawner_timer->interval() - 500);
+        }
+    }
 }
 
 int Game::getTileSize()
@@ -294,6 +309,17 @@ void Game::mousePressEvent(QMouseEvent *event)
     }
 }
 
+//void Game::keyPressEvent(QKeyEvent *ev)
+//{
+//    switch (ev->key())
+//    {
+//        case Qt::Key_Return:
+//            buildwall = new BuildWall(*this);
+//            scene->setFocusItem(buildwall);
+//            break;
+//    }
+//}
+
 
 
 void Game::animateSmoke()
@@ -327,4 +353,5 @@ void Game::reloadBarTimer()
         reload_bar_length = 0;
     }
 }
+
 

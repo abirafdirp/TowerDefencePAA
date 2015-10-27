@@ -6,15 +6,26 @@
 #include <QKeyEvent>
 #include <QDebug>
 #include "Path.h"
+#include <QGraphicsWidget>
+#include <QGraphicsTextItem>
 
 
 BuildWall::BuildWall(Game &game_) : game(game_)
 {
+    walls = 60;
     setPixmap(QPixmap(":/wall/assets/wall/brick_red.png"));
     setScale(0.5);
     game.scene->addItem(this);
     this->setFlag(QGraphicsItem::ItemIsFocusable, true);
     this->setFocus();
+
+    caramain = new QGraphicsPixmapItem(QPixmap(":/menu/assets/menu/caramain.png"));
+    game.scene->addItem(caramain);
+
+    walls_text = new QGraphicsTextItem(QString("Penghalang yang tersedia : %1").arg(walls));
+    walls_text->setPos(20,10);
+    walls_text->setScale(1.5);
+    game.scene->addItem(walls_text);
 }
 
 void BuildWall::keyPressEvent(QKeyEvent *ev)
@@ -43,7 +54,14 @@ void BuildWall::keyPressEvent(QKeyEvent *ev)
             }
             break;
         case Qt::Key_Space:{
-            qDebug() << x() << game.spawn1->x() << y() << game.spawn1->y();
+
+            if (walls == 0){
+                break;
+            }
+
+            walls--;
+
+            walls_text->setPlainText(QString("Penghalang yang tersedia : %1").arg(walls));
 
             if (((x() == game.spawn1->x()) && (y() == game.spawn1->y())) || ((y() == game.dest1->y()) && (x() == game.dest1->x()))){
             }
@@ -61,7 +79,16 @@ void BuildWall::keyPressEvent(QKeyEvent *ev)
 
         }
         case Qt::Key_Return:
-            game.generatePath();
+            if (isFocus){
+               game.generatePath();
+            }
+            else {
+                isFocus = true;
+                game.scene->removeItem(caramain);
+            }
+            break;
+        case Qt::Key_Escape:
+            game.restartScene();
             break;
     }
 }

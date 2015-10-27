@@ -8,6 +8,7 @@
 #include <QGraphicsView>
 #include "Tower.h"
 #include <QObject>
+#include <QGraphicsTextItem>
 
 class BuildWall;
 
@@ -15,6 +16,9 @@ class Game: public QGraphicsView{
     Q_OBJECT
 public:
     Game();
+    QGraphicsTextItem * score_text;
+
+    int score = 0;
 
     QGraphicsScene * scene;
     Wall * build_wall;
@@ -26,9 +30,6 @@ public:
 
     // tiles are indexed in int for easy sorting in QMap. We must use indexOfPoint(x,y) to get an index of a tile
     QMap<int,Tile*> tiles;
-
-    // spawning entities
-    void spawnBlueSlime(Tile &spawn, Tile &dest, Path &path);
 
     // getter setter
     int getTileSize();
@@ -55,7 +56,12 @@ public:
 
     void restartScene();
 
+    QTimer *spawner_timer;
+    int increase_spawner = 0;
+
 private:
+
+    Path *path;
 
     // game initializations
     void createMapTiles(QString filename);
@@ -91,10 +97,15 @@ private:
 
     bool can_fire = true;
 
+//    void keyPressEvent(QKeyEvent *ev);
+
 private slots:
     void animateSmoke();
     void reloadTimer();
     void reloadBarTimer();
+
+    // spawning entities, must set path member variable
+    void spawnBlueSlime();
 
 };
 

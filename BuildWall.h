@@ -14,6 +14,12 @@ public:
     BuildWall(Game &game_);
     Game &game;
 
+    int walls;
+
+    bool isFocus = false;
+
+    QGraphicsPixmapItem *caramain;
+    QGraphicsTextItem *walls_text;
 private:
     void keyPressEvent(QKeyEvent *ev);
 

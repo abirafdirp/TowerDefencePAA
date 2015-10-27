@@ -47,6 +47,8 @@ void Bullet::targetCheck()
     if (((this->pos().x() <= target.x() + 20) && (this->pos().x() >= target.x() - 20)) && ((this->pos().y() <= target.y() + 20) && (this->pos().y() >= target.y() - 20))) {
         disconnect(target_check_timer,SIGNAL(timeout()),this,SLOT(targetCheck()));
 
+
+
         explosion_animation_timer = new QTimer();
         connect(explosion_animation_timer,SIGNAL(timeout()),this,SLOT(explosionAnimation()));
         explosion_animation_timer->start(50);
@@ -55,10 +57,12 @@ void Bullet::targetCheck()
         explosion->setOffset(-40,-45);
         game.scene->addItem(explosion);
 
-        QList<QGraphicsItem*> attacked = game.scene->items(QRectF(explosion->pos().x() - 40, explosion->pos().y() -45,80,80));
+        QList<QGraphicsItem*> attacked = game.scene->items(QRectF(explosion->pos().x() - 30, explosion->pos().y() -35,70,70));
         foreach (QGraphicsItem *object, attacked){
             if (object->zValue() == 1){
                 delete object;
+                game.score += 1;
+                game.score_text->setPlainText(QString("Skor : %1").arg(game.score));
             }
         }
 
