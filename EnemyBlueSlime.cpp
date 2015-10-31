@@ -7,6 +7,7 @@
 #include "Tile.h"
 #include "QDebug"
 #include <QMessageBox>
+#include <QGraphicsTextItem>
 
 BlueSlime::BlueSlime(Game &game_, Path &path_, QGraphicsItem *parent) : game(game_), path(path_)
 {
@@ -27,7 +28,14 @@ void BlueSlime::startSpawner()
 {
 //    spawner_timer = new QTimer();
 //    connect(spawner_timer,SIGNAL(timeout()),this,SLOT(spawner()));
-//    spawner_timer->start(3000);
+    //    spawner_timer->start(3000);
+}
+
+void BlueSlime::keyPressEvent(QKeyEvent *ev)
+{
+    if (ev->key() == Qt::Key_Escape) {
+        game.restartScene();
+    }
 }
 
 void BlueSlime::move()
@@ -54,7 +62,14 @@ void BlueSlime::move()
         disconnect(game.spawner_timer,SIGNAL(timeout()),&game,SLOT(spawnBlueSlime()));
         QGraphicsPixmapItem *skor = new QGraphicsPixmapItem(QPixmap(":/menu/assets/menu/score copy.png"));
         game.scene->addItem(skor);
-        MyApplication::delay(999999999);
+
+        QGraphicsTextItem *skor_text = new QGraphicsTextItem(QString("%1").arg(game.score));
+        skor_text->setPos(586,170);
+        skor_text->setZValue(99999);
+        skor_text->setScale(4);
+        game.scene->addItem(skor_text);
+
+        grabKeyboard();
     }
 
 }

@@ -21,6 +21,8 @@ private:
 
     QTimer *spawner_timer;
 
+    void keyPressEvent(QKeyEvent *ev);
+
 public slots:
     void spawner();
     void move();

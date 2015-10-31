@@ -98,10 +98,11 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         //qDebug() << indexdebug;
         //indexdebug++;
         //printOpen();
-        //MyApplication::delay(20);
+        //MyApplication::delay(50);
     } // end while
     if (destfound){
        reconstructPath();
+       printPath();
     }
     else {
         QMessageBox msgBox;
@@ -109,7 +110,6 @@ Path::Path(Game &game_, Tile &spawn_, Tile &dest_) : game(game_), spawn(spawn_),
         msgBox.exec();
         game.restartScene();
     }
-    //printPath();
 }
 bool Path::openContains(Tile &tile)
 {
