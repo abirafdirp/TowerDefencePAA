@@ -27,7 +27,7 @@
     <qresource prefix="/menu">
         <file>assets/menu/caramain.png</file>
         <file>assets/menu/menu.png</file>
-        <file>assets/menu/score copy.png</file>
         <file>assets/menu/warning copy.png</file>
+        <file>assets/menu/score copy.png</file>
     </qresource>
 </RCC>
