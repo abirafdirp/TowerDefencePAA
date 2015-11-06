@@ -54,10 +54,13 @@ void BuildWall::keyPressEvent(QKeyEvent *ev)
             }
             break;
         case Qt::Key_Space:{
+            int buildwall_x = x() / game.map_tile_size;
+            int buildwall_y = y() / game.map_tile_size;
 
-            if (walls == 0){
+            if ((walls == 0) || (game.tiles.value(game.indexOfPoint(buildwall_x,buildwall_y))->walkable == 0)){
                 break;
             }
+
 
             walls--;
 
@@ -69,8 +72,6 @@ void BuildWall::keyPressEvent(QKeyEvent *ev)
 
             }
             else {
-                int buildwall_x = x() / game.map_tile_size;
-                int buildwall_y = y() / game.map_tile_size;
                 Tile *tile = game.tiles.value(game.indexOfPoint(buildwall_x,buildwall_y));
                 tile->walkable = false;
                 tile->setPixmap(QPixmap(":/wall/assets/wall/brick_red.png"));
