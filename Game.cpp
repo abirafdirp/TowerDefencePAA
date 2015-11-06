@@ -36,7 +36,7 @@ Game::Game()
     //cursor->setZValue(999);
     //QApplication::setOverrideCursor(Qt::BlankCursor);
 
-    QCursor(cursor);
+    setCursor(*cursor);
 
     createMapTiles(":/floor/assets/floor/dirt.png");
     //drawTilesOverlay(":/util/assets/util/sTrackBorder_0.png");
@@ -87,14 +87,17 @@ Game::Game()
 }
 
 void Game::generatePath() {
-    path = new Path(*this,*spawn1,*dest1);
+    if (!game_started) {
+        game_started = true;
+        path = new Path(*this,*spawn1,*dest1);
 
-    if (path->destfound){
-        buildwall->setZValue(-9999);
-        spawner_timer = new QTimer();
-        connect(spawner_timer,SIGNAL(timeout()),this,SLOT(spawnBlueSlime()));
-        spawner_timer->start(5000);
-        spawnBlueSlime();
+        if (path->destfound){
+            buildwall->setZValue(-9999);
+            spawner_timer = new QTimer();
+            connect(spawner_timer,SIGNAL(timeout()),this,SLOT(spawnBlueSlime()));
+            spawner_timer->start(5000);
+            spawnBlueSlime();
+        }
     }
 }
 
@@ -290,7 +293,7 @@ void Game::mousePressEvent(QMouseEvent *event)
            reload_timer = new QTimer();
            reload_bar_timer = new QTimer();
            connect(smoke_timer,SIGNAL(timeout()),this,SLOT(animateSmoke()));
-           connect(reload_timer,SIGNAL(timeout()),this,SLOT(reloadTimer()));
+           //connect(reload_timer,SIGNAL(timeout()),this,SLOT(reloadTimer()));
            connect(reload_bar_timer,SIGNAL(timeout()),this,SLOT(reloadBarTimer()));
            smoke_timer->start(50);
            reload_timer->start(3000);
@@ -335,13 +338,15 @@ void Game::animateSmoke()
 
 void Game::reloadTimer()
 {
-    can_fire = true;
     disconnect(reload_timer,SIGNAL(timeout()),this,SLOT(reloadTimer()));
 }
 
 void Game::reloadBarTimer()
 {
-    if (reload_bar_threshold <= 2600) {
+    if (reload_bar_threshold == 2600) {
+        can_fire = true;
+    }
+    if (reload_bar_threshold < 2600) {
         reload_bar_threshold += 100;
         reload_bar->setRect(base_reload_bar->pos().x(),base_reload_bar->pos().y(),reload_bar_length,10);
         reload_bar_length+=2;

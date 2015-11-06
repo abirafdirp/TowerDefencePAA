@@ -68,8 +68,6 @@ void BlueSlime::move()
         skor_text->setZValue(99999);
         skor_text->setScale(4);
         game.scene->addItem(skor_text);
-
-        grabKeyboard();
     }
 
 }

@@ -96,6 +96,7 @@ private:
     QPixmap *cursor = nullptr;
 
     bool can_fire = true;
+    bool game_started = false;
 
 //    void keyPressEvent(QKeyEvent *ev);
 
