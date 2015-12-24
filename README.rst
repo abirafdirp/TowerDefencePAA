@@ -9,7 +9,7 @@ To get pathing debug, uncomment the codes in line 42,92,101 and 105 in path.cpp 
 Pictures
 ==============================
 .. image:: https://www.abiraf.com/media/images/Screenshot-6.original.png
-.. image:: https://www.abiraf.com/media/images/Screenshot-7.original.png
+.. image:: https://www.abiraf.com/media/images/Screenshot-8.original.png
 
 
 Pathing Debug Demo
