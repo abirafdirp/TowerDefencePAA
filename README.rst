@@ -2,7 +2,7 @@ A* pathfind
 ==============================
 Made with Qt 5.4 
 
-Warning, the code is very, very ugly.
+Warning, the code is very, very ugly (made when I was still in college).
 
 Binary for Windows is in bin folder.
 
